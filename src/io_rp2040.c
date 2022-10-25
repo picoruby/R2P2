@@ -2,36 +2,7 @@
 
 #include <mrubyc.h>
 
-#define BUF_SIZE 64
-#define STDOUT_FD 0
-
-static void
-c_gets_nonblock(mrb_vm *vm, mrb_value *v, int argc)
-{
-  int len = 0;
-  int c;
-  char buf[BUF_SIZE];
-  while (hal_read(STDOUT_FD, &c, 1)) {
-    buf[len] = c;
-    len++;
-    if (c == 10) break;
-  }
-  buf[len] = 0;
-  mrbc_value value = mrbc_string_new(vm, buf, len);
-  SET_RETURN(value);
-}
-
-static void
-c_getch(mrb_vm *vm, mrb_value *v, int argc)
-{
-  int c;
-  int res = hal_read(STDOUT_FD, &c, 1);
-  if (res != 1) {
-    SET_NIL_RETURN();
-  } else {
-    SET_INT_RETURN(c);
-  }
-}
+#include "../lib/picoruby/mrbgems/picoruby-io/src/hal/hal.h"
 
 static void
 c_get_cursor_position(mrb_vm *vm, mrb_value *v, int argc)
@@ -50,9 +21,11 @@ c_get_cursor_position(mrb_vm *vm, mrb_value *v, int argc)
   if (res != 4) mrbc_raise(vm, MRBC_CLASS(RuntimeError), "write() failed");
 
   for (;;) {
-    res = hal_read(0, &c, 1);
-    // if (res < 0) ignore
-    if (res == 0) break;
+    c = hal_read_char(STDIN_FD);
+    if (c < 0) {
+      mrbc_raise(vm, MRBC_CLASS(RuntimeError), "hal_read_char() failed");
+      break;
+    }
     if(0x30 <= c && c <= 0x39) *p1++ = c;
     if(c == ';') {
       *p1++ = '\0';
@@ -76,10 +49,8 @@ c_get_cursor_position(mrb_vm *vm, mrb_value *v, int argc)
 }
 
 void
-mrbc_io_console_init(void)
+mrbc_io_rp2040_init(void)
 {
-  mrbc_define_method(0, mrbc_class_object, "gets_nonblock", c_gets_nonblock);
-  mrbc_define_method(0, mrbc_class_object, "getch", c_getch);
   mrbc_define_method(0, mrbc_class_object, "get_cursor_position", c_get_cursor_position);
 }
 

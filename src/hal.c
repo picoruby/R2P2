@@ -9,6 +9,8 @@
 //#include "../include/tusb_config.h"
 #include <tusb.h>
 
+#include "../lib/picoruby/mrbgems/picoruby-io/src/hal/hal.h"
+
 /* mruby/c */
 #include <rrt0.h>
 
@@ -56,12 +58,33 @@ int hal_flush(int fd) {
 }
 
 int
-hal_read(int fd, void *buf, int nbytes)
+hal_read_available(int fd)
 {
   if (tud_cdc_available()) {
-    return tud_cdc_read(buf, nbytes);
+    return 1;
   } else {
     return 0;
+  }
+}
+
+int
+hal_read_nonblock(int fd, char *buf, int nbytes)
+{
+  int len = tud_cdc_read(buf, nbytes);
+  return len;
+}
+
+int
+hal_read_char(int fd)
+{
+  while (!hal_read_available(STDIN_FD)) {
+    sleep_ms(5);
+  }
+  int c = tud_cdc_read_char();
+  if (c < 0) {
+    return -1;
+  } else {
+    return c;
   }
 }
 

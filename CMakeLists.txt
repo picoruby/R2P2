@@ -23,7 +23,7 @@ add_executable(${PROJECT_NAME}
   ${CMAKE_SOURCE_DIR}/src/main.c
   ${CMAKE_SOURCE_DIR}/src/usb_descriptors.c
   ${CMAKE_SOURCE_DIR}/src/flash_disk.c
-  ${CMAKE_SOURCE_DIR}/src/io_console.c
+  ${CMAKE_SOURCE_DIR}/src/io_rp2040.c
   ${CMAKE_SOURCE_DIR}/src/msc_disk.c
 )
 

@@ -153,7 +153,8 @@ Flash_disk_write(const BYTE *buff, LBA_t sector, UINT count)
 DWORD
 get_fattime(void)
 {
-  DWORD time = 1<<21 | 1<<16;
+  /* Implement if RTC */
+  DWORD time = 0;
   return time;
 }
 
