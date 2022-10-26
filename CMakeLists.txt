@@ -18,14 +18,26 @@ add_compile_options(-Wall
   -Wno-maybe-uninitialized
 )
 
-add_executable(${PROJECT_NAME}
-  ${CMAKE_SOURCE_DIR}/src/hal.c
-  ${CMAKE_SOURCE_DIR}/src/main.c
-  ${CMAKE_SOURCE_DIR}/src/usb_descriptors.c
-  ${CMAKE_SOURCE_DIR}/src/flash_disk.c
-  ${CMAKE_SOURCE_DIR}/src/io_rp2040.c
-  ${CMAKE_SOURCE_DIR}/src/msc_disk.c
+
+file(GLOB SRCS src/*.c)
+add_executable(${PROJECT_NAME} ${SRCS})
+
+add_dependencies(${PROJECT_NAME}
+  mrbdir
+  mrblib
 )
+
+set(PICORBC ${CMAKE_SOURCE_DIR}/lib/picoruby/bin/picorbc)
+
+add_custom_target(mrbdir ALL
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_SOURCE_DIR}/build/mrb
+)
+
+foreach(rb app)
+add_custom_target(mrblib
+  COMMAND ${PICORBC} -B${rb} -o${CMAKE_SOURCE_DIR}/build/mrb/${rb}.c ${CMAKE_SOURCE_DIR}/mrblib/${rb}.rb
+)
+endforeach(rb)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/include
