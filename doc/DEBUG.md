@@ -1,0 +1,8 @@
+- Connect Picoprobe to a USB
+- On Powershell as an admin
+  - Confirm BUSID by `usbipd list`
+  - `usbipd wsl attach --busid [BUSID]`
+- On a terminal window
+  - `openocd`
+- On another window
+  - `MRUBY_CONFIG=prsh-cortex-m0plus rake build && gdb-pico build/R2P2.elf`

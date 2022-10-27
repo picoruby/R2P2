@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.24)
 
 include(pico_sdk_import.cmake)
 
-project(prsh-rp2)
+project(R2P2)
 
 #set(PICO_EXAMPLES_PATH ${PROJECT_SOURCE_DIR})
 
@@ -51,7 +51,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 )
 
 target_link_directories(${PROJECT_NAME} PRIVATE
-  ${CMAKE_SOURCE_DIR}/lib/picoruby/build/prsh_arm-none-eabi/lib
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/build/prsh-cortex-m0plus/lib
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
@@ -68,8 +68,8 @@ include_directories(${PROJECT_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/lib/picoruby/include/hal_no_impl
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mrubyc/repos/mrubyc/src
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-filesystem-fat/lib/ff14b/source
-  ${CMAKE_SOURCE_DIR}/lib/picoruby/build/prsh_arm-none-eabi/mrbgems
-  ${CMAKE_SOURCE_DIR}/lib/picoruby/build/repos/prsh_arm-none-eabi/mruby-pico-compiler/include
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/build/prsh-cortex-m0plus/mrbgems
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/build/repos/prsh-cortex-m0plus/mruby-pico-compiler/include
 )
 
 pico_add_extra_outputs(${PROJECT_NAME})
