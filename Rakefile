@@ -1,10 +1,14 @@
 require "fileutils"
 
-MRUBY_CONFIG = "prsh-lib_arm-none-eabi"
+MRUBY_CONFIG = "prsh-cortex-m0plus"
 
 task :default => :all
 
-task :all => [:libmruby, :main]
+desc "build production"
+task :all => [:libmruby, :cmake_production, :build]
+
+desc "clean then build debug"
+task :debug => [:clean, :libmruby, :cmake_debug, :build]
 
 file "lib/picoruby" do
   FileUtils.cd "lib" do
@@ -18,8 +22,16 @@ task :libmruby => "lib/picoruby" do
   end
 end
 
-task :main do
+task :cmake_debug do
+  sh "cmake -DCMAKE_BUILD_TYPE=Debug -B build"
+end
+
+task :cmake_production do
   sh "cmake -B build"
+end
+
+desc "build without cmake preparation"
+task :build do
   sh "cmake --build build"
 end
 

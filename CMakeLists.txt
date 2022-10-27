@@ -18,13 +18,20 @@ add_compile_options(-Wall
   -Wno-maybe-uninitialized
 )
 
+add_definitions(
+  -DNDEBUG
+  -DMRBC_REQUIRE_32BIT_ALIGNMENT
+  -DMRBC_CONVERT_CRLF
+  -DMRBC_USE_MATH
+)
 
 file(GLOB SRCS src/*.c)
 add_executable(${PROJECT_NAME} ${SRCS})
 
 add_dependencies(${PROJECT_NAME}
   mrbdir
-  mrblib
+  app
+  usb_task
 )
 
 set(PICORBC ${CMAKE_SOURCE_DIR}/lib/picoruby/bin/picorbc)
@@ -33,8 +40,8 @@ add_custom_target(mrbdir ALL
   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_SOURCE_DIR}/build/mrb
 )
 
-foreach(rb app)
-add_custom_target(mrblib
+foreach(rb app usb_task)
+add_custom_target(${rb}
   COMMAND ${PICORBC} -B${rb} -o${CMAKE_SOURCE_DIR}/build/mrb/${rb}.c ${CMAKE_SOURCE_DIR}/mrblib/${rb}.rb
 )
 endforeach(rb)
@@ -49,6 +56,7 @@ target_link_directories(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
   pico_stdlib
+  pico_bootsel_via_double_reset
   tinyusb_device
   tinyusb_board
   mruby
