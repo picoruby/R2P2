@@ -28,19 +28,20 @@ add_definitions(
 file(GLOB SRCS src/*.c)
 add_executable(${PROJECT_NAME} ${SRCS})
 
-add_dependencies(${PROJECT_NAME}
-  mrbdir
-  app
-  usb_task
-)
-
 set(PICORBC ${CMAKE_SOURCE_DIR}/lib/picoruby/bin/picorbc)
 
 add_custom_target(mrbdir ALL
   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_SOURCE_DIR}/build/mrb
 )
 
-foreach(rb app usb_task)
+set(RUBY_FILES prsh_task usb_task)
+
+add_dependencies(${PROJECT_NAME}
+  mrbdir
+  ${RUBY_FILES}
+)
+
+foreach(rb ${RUBY_FILES})
 add_custom_target(${rb}
   COMMAND ${PICORBC} -B${rb} -o${CMAKE_SOURCE_DIR}/build/mrb/${rb}.c ${CMAKE_SOURCE_DIR}/mrblib/${rb}.rb
 )

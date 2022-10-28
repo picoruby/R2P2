@@ -9,7 +9,7 @@
 #include <picorbc.h>
 #include <picogem_init.c>
 
-#include "../build/mrb/app.c"
+#include "../build/mrb/prsh_task.c"
 #include "../build/mrb/usb_task.c"
 
 #ifndef HEAP_SIZE
@@ -62,7 +62,7 @@ main(void)
   mrbc_define_method(0, mrbc_class_object, "cdc_task", c_cdc_task);
   mrbc_require_init();
   mrbc_create_task(usb_task, 0);
-  mrbc_create_task(app, 0);
+  mrbc_create_task(prsh_task, 0);
   mrbc_run();
   return 0;
 }
