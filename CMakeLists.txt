@@ -19,10 +19,15 @@ add_compile_options(-Wall
 )
 
 add_definitions(
+  # These defines should correspond to
+  # picoruby/build_config/prsh-cortex-m0plus.rb
   -DNDEBUG
   -DMRBC_REQUIRE_32BIT_ALIGNMENT
   -DMRBC_CONVERT_CRLF
   -DMRBC_USE_MATH
+  -DMRBC_TICK_UNIT=1
+  -DMRBC_TIMESLICE_TICK_COUNT=10
+  -DMRBC_NO_TIMER
 )
 
 file(GLOB SRCS src/*.c)

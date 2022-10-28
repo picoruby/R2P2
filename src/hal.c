@@ -6,7 +6,6 @@
 #include <hardware/irq.h>
 #include <hardware/clocks.h>
 #include <hardware/sync.h>
-//#include "../include/tusb_config.h"
 #include <tusb.h>
 
 #include "../lib/picoruby/mrbgems/picoruby-io/src/hal/hal.h"
@@ -16,28 +15,18 @@
 
 #define ALARM_IRQ 0
 
-void hal_enable_irq()  { irq_set_enabled(ALARM_IRQ, true); }
-void hal_disable_irq() { irq_set_enabled(ALARM_IRQ, false); }
-void hal_idle_cpu()    { __wfi(); }
-
+#ifndef MRBC_NO_TIMER
 struct repeating_timer timer;
-
-//================================================================
-/*!@brief
-  timer alarm irq
-
-*/
-bool alarm_irq(struct repeating_timer *t) {
+bool
+alarm_irq(struct repeating_timer *t)
+{
   mrbc_tick();
   return false;
 }
 
-//================================================================
-/*!@brief
-  initialize
-
-*/
-void hal_init(void){
+void
+hal_init(void)
+{
   add_repeating_timer_ms(1, alarm_irq, NULL, &timer);
   clocks_hw->sleep_en0 = 0;
   clocks_hw->sleep_en1 = CLOCKS_SLEEP_EN1_CLK_SYS_TIMER_BITS
@@ -46,6 +35,36 @@ void hal_init(void){
                         | CLOCKS_SLEEP_EN1_CLK_SYS_UART0_BITS
                         | CLOCKS_SLEEP_EN1_CLK_PERI_UART0_BITS;
 }
+
+void hal_enable_irq()
+{
+  irq_set_enabled(ALARM_IRQ, true);
+}
+
+void
+hal_disable_irq()
+{
+  irq_set_enabled(ALARM_IRQ, false);
+}
+
+void
+hal_idle_cpu()
+{
+  __wfi();
+}
+
+#else // MRBC_NO_TIMER
+
+# define hal_init()        ((void)0)
+# define hal_enable_irq()  ((void)0)
+# define hal_disable_irq() ((void)0)
+void
+hal_idle_cpu()
+{
+  sleep_ms(1);
+  mrbc_tick();
+}
+#endif
 
 int hal_write(int fd, const void *buf, int nbytes)
 {
