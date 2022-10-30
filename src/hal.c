@@ -30,10 +30,10 @@ hal_init(void)
   add_repeating_timer_ms(1, alarm_irq, NULL, &timer);
   clocks_hw->sleep_en0 = 0;
   clocks_hw->sleep_en1 = CLOCKS_SLEEP_EN1_CLK_SYS_TIMER_BITS
-                        | CLOCKS_SLEEP_EN1_CLK_SYS_USBCTRL_BITS
-                        | CLOCKS_SLEEP_EN1_CLK_USB_USBCTRL_BITS
-                        | CLOCKS_SLEEP_EN1_CLK_SYS_UART0_BITS
-                        | CLOCKS_SLEEP_EN1_CLK_PERI_UART0_BITS;
+  | CLOCKS_SLEEP_EN1_CLK_SYS_USBCTRL_BITS
+  | CLOCKS_SLEEP_EN1_CLK_USB_USBCTRL_BITS
+  | CLOCKS_SLEEP_EN1_CLK_SYS_UART0_BITS
+  | CLOCKS_SLEEP_EN1_CLK_PERI_UART0_BITS;
 }
 
 void hal_enable_irq()
@@ -55,9 +55,6 @@ hal_idle_cpu()
 
 #else // MRBC_NO_TIMER
 
-# define hal_init()        ((void)0)
-# define hal_enable_irq()  ((void)0)
-# define hal_disable_irq() ((void)0)
 void
 hal_idle_cpu()
 {
@@ -77,7 +74,7 @@ int hal_flush(int fd) {
 }
 
 int
-hal_read_available(int fd)
+hal_read_available(void)
 {
   if (tud_cdc_available()) {
     return 1;
@@ -87,23 +84,12 @@ hal_read_available(int fd)
 }
 
 int
-hal_read_nonblock(int fd, char *buf, int nbytes)
+hal_getchar(void)
 {
-  int len = tud_cdc_read(buf, nbytes);
-  return len;
-}
-
-int
-hal_read_char(int fd)
-{
-  while (!hal_read_available(STDIN_FD)) {
-    sleep_ms(5);
-  }
-  int c = tud_cdc_read_char();
-  if (c < 0) {
-    return -1;
+  if (tud_cdc_available()) {
+    return tud_cdc_read_char();
   } else {
-    return c;
+    return -1;
   }
 }
 

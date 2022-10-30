@@ -9,6 +9,7 @@
 #include <picorbc.h>
 #include <picogem_init.c>
 
+#include "../include/io_rp2040.h"
 #include "../build/mrb/prsh_task.c"
 #include "../build/mrb/usb_task.c"
 
@@ -58,6 +59,7 @@ main(void)
   tusb_init();
 
   mrbc_init(heap_pool, HEAP_SIZE);
+  mrbc_io_rp2040_init();
   mrbc_define_method(0, mrbc_class_object, "tud_task", c_tud_task);
   mrbc_define_method(0, mrbc_class_object, "cdc_task", c_cdc_task);
   mrbc_require_init();
