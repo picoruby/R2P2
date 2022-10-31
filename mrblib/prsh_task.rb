@@ -10,9 +10,9 @@ require "vim"
 #Dir = MyDir
 
 # Wait until CDC becomes stable
-4.times do |i|
+3.times do |i|
   sleep 1
-  puts "#{3 - i}"
+  puts "#{2 - i}"
 end
 
 Shell.new.start(:prsh)
