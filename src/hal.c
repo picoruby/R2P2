@@ -15,19 +15,24 @@
 
 #define ALARM_IRQ 0
 
+#ifndef MRBC_TICK_UNIT
+#define MRBC_TICK_UNIT=1
+#endif
+
 #ifndef MRBC_NO_TIMER
 struct repeating_timer timer;
+
 bool
 alarm_irq(struct repeating_timer *t)
 {
   mrbc_tick();
-  return false;
+  return true;
 }
 
 void
 hal_init(void)
 {
-  add_repeating_timer_ms(1, alarm_irq, NULL, &timer);
+  add_repeating_timer_ms(MRBC_TICK_UNIT, alarm_irq, NULL, &timer);
   clocks_hw->sleep_en0 = 0;
   clocks_hw->sleep_en1 = CLOCKS_SLEEP_EN1_CLK_SYS_TIMER_BITS
   | CLOCKS_SLEEP_EN1_CLK_SYS_USBCTRL_BITS
@@ -58,7 +63,7 @@ hal_idle_cpu()
 void
 hal_idle_cpu()
 {
-  sleep_ms(1);
+  sleep_ms(MRBC_TICK_UNIT);
   mrbc_tick();
 }
 #endif
