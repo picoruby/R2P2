@@ -9,11 +9,15 @@ require "vim"
 #File = MyFile
 #Dir = MyDir
 
-# Wait until CDC becomes stable
-3.times do |i|
-  sleep 1
-  puts "#{2 - i}"
+IO.wait_and_clear
+
+def exit
+  # do nothing
 end
 
-Shell.new.start(:prsh)
-
+begin
+  Shell.new.start(:prsh)
+rescue => e
+  puts "#{e.message} (#{e.class})"
+  retry
+end
