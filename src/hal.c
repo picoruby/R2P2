@@ -70,6 +70,7 @@ hal_idle_cpu()
 
 int hal_write(int fd, const void *buf, int nbytes)
 {
+  tud_task();
   tud_cdc_write(buf, nbytes);
   return tud_cdc_write_flush();
 }
