@@ -11,20 +11,21 @@
 #define STA_NODISK		0x02	/* No medium in the drive */
 #define STA_PROTECT		0x04	/* Write protected */
 
-static bool first = true;
+int
+FLASH_disk_erase(void)
+{
+  uint32_t ints = save_and_disable_interrupts();
+  flash_range_erase(
+    (uint32_t)(FLASH_TARGET_OFFSET),
+    (size_t)(SECTOR_SIZE * SECTOR_COUNT)
+  );
+  restore_interrupts(ints);
+  return 0;
+}
 
 int
 FLASH_disk_initialize(void)
 {
-  if (first) {
-    uint32_t ints = save_and_disable_interrupts();
-    flash_range_erase(
-      (uint32_t)(FLASH_TARGET_OFFSET),
-      (size_t)(SECTOR_SIZE * SECTOR_COUNT)
-    );
-    restore_interrupts(ints);
-    first = false;
-  }
   /* Flash ROM is always ready */
   return 0;
 }
