@@ -11,8 +11,11 @@ def exit
   raise # to restart
 end
 
-begin
 IO.wait_and_clear
+FAT._setup(0) # Workaround until Flash ROM works
+
+begin
+  IO.wait_and_clear
   Shell.new.start(:prsh)
 rescue => e
   puts "#{e.message} (#{e.class})"
