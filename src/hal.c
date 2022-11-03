@@ -41,7 +41,8 @@ hal_init(void)
   | CLOCKS_SLEEP_EN1_CLK_PERI_UART0_BITS;
 }
 
-void hal_enable_irq()
+void
+hal_enable_irq()
 {
   irq_set_enabled(ALARM_IRQ, true);
 }

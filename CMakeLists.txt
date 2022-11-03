@@ -64,6 +64,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   pico_bootsel_via_double_reset
   tinyusb_device
   tinyusb_board
+  hardware_flash
   mruby
 )
 
