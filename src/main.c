@@ -14,13 +14,13 @@
 #include "../build/mrb/usb_task.c"
 
 #ifndef HEAP_SIZE
-#define HEAP_SIZE (1024 * 200 - 1)
+#define HEAP_SIZE (1024 * 220 - 1)
 #endif
 
 int loglevel = LOGLEVEL_ERROR;
 static uint8_t heap_pool[HEAP_SIZE];
 
-void
+static void
 c_tud_task(mrbc_vm *vm, mrbc_value v[], int argc)
 {
   tud_task();

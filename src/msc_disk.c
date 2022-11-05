@@ -53,7 +53,7 @@ void
 tud_msc_inquiry_cb(uint8_t lun, uint8_t vendor_id[8], uint8_t product_id[16], uint8_t product_rev[4])
 {
   const char vid[] = "PicoRuby";
-  const char pid[] = "Mass Storage";
+  const char pid[] = "PicoRuby MSC";
   const char rev[] = "1.0";
   memcpy(vendor_id  , vid, strlen(vid));
   memcpy(product_id , pid, strlen(pid));
