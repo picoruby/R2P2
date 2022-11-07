@@ -33,7 +33,7 @@
 #include <tusb.h>
 
 // Totally workaround until Flash ROM works
-#define PICORUBY_MOUNT_RAM_MSC
+//#define PICORUBY_MOUNT_RAM_MSC
 #ifdef PICORUBY_MOUNT_RAM_MSC
 #include <alloc.h>
 #include "../lib/picoruby/mrbgems/picoruby-filesystem-fat/src/hal/ram_disk.h"

@@ -4,6 +4,9 @@ require "filesystem-fat"
 require "vfs"
 require "vim"
 
+ENV = {}
+ARGV = []
+
 File = MyFile
 Dir = MyDir
 
@@ -19,5 +22,7 @@ begin
   Shell.new.start(:prsh)
 rescue => e
   puts "#{e.message} (#{e.class})"
+  puts "Rebooting"
+  sleep 1
   retry
 end
