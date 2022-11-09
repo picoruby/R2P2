@@ -11,9 +11,7 @@ desc "clean then build debug"
 task :debug => [:clean, :libmruby, :cmake_debug, :build]
 
 file "lib/picoruby" do
-  FileUtils.cd "lib" do
-    sh "git clone --recursive https://github.com/picoruby/picoruby.git"
-  end
+  sh "git submodule update --init --recursive"
 end
 
 task :libmruby => "lib/picoruby" do
