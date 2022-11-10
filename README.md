@@ -4,6 +4,8 @@ R2P2 (Ruby on Raspberry Pi Pico) is a shell system written in [picoruby/picoruby
 
 ## Usage
 
+(TODO)
+
 - Download a release binary
 - Drag and drop it into the RPI-RP2 drive of Pi Pico
 - Connect the shell through a serial port with a terminal emulator
