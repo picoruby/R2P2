@@ -4,12 +4,17 @@ cmake_minimum_required(VERSION 3.24)
 
 include(pico_sdk_import.cmake)
 
-project(R2P2)
-
 #set(PICO_EXAMPLES_PATH ${PROJECT_SOURCE_DIR})
 
 # Initialize the SDK
 pico_sdk_init()
+
+execute_process (COMMAND date +%Y%m%d OUTPUT_VARIABLE CMAKE_BUILDDATE OUTPUT_STRIP_TRAILING_WHITESPACE)
+execute_process (COMMAND git rev-parse --short HEAD OUTPUT_VARIABLE CMAKE_REVISION OUTPUT_STRIP_TRAILING_WHITESPACE)
+set (R2P2_VERSION   0.0.1)
+set (R2P2_BUILDDATE ${CMAKE_BUILDDATE})
+set (R2P2_REVISION  ${CMAKE_REVISION})
+project("R2P2-${R2P2_VERSION}-${R2P2_BUILDDATE}-${R2P2_REVISION}")
 
 add_compile_options(-Wall
   # int != int32_t as far as the compiler is concerned because gcc has int32_t as long int
@@ -80,3 +85,9 @@ include_directories(${PROJECT_NAME} PRIVATE
 
 pico_add_extra_outputs(${PROJECT_NAME})
 
+add_custom_command(
+  TARGET ${PROJECT_NAME}
+  POST_BUILD
+  COMMAND gzip -kf ${PROJECT_NAME}.uf2
+  COMMAND zip -r ${PROJECT_NAME}.uf2.zip ${PROJECT_NAME}.uf2
+)
