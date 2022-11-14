@@ -48,5 +48,9 @@ task :clean do
   FileUtils.cd "lib/picoruby" do
     sh "MRUBY_CONFIG=#{MRUBY_CONFIG} rake clean"
   end
-  sh "cmake --build build --target clean"
+  begin
+    sh "cmake --build build --target clean"
+  rescue => e
+    puts "Ignoring an error: #{e.message}"
+  end
 end
