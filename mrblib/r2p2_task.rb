@@ -19,7 +19,7 @@ FAT._setup(0) # Workaround until Flash ROM works
 
 begin
   IO.wait_and_clear
-  Shell.new.start(:prsh)
+  Shell.new.start(:shell)
 rescue => e
   puts "#{e.message} (#{e.class})"
   puts "Rebooting"

@@ -5,4 +5,4 @@
 - On a terminal window
   - `openocd`
 - On another window
-  - `MRUBY_CONFIG=prsh-cortex-m0plus rake build && gdb-pico build/R2P2.elf`
+  - `MRUBY_CONFIG=r2p2-cortex-m0plus rake build && gdb-pico build/R2P2.elf`

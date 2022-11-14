@@ -1,6 +1,6 @@
 require "fileutils"
 
-MRUBY_CONFIG = "prsh-cortex-m0plus"
+MRUBY_CONFIG = "r2p2-cortex-m0plus"
 
 task :default => :all
 

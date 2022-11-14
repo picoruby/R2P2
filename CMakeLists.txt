@@ -25,7 +25,7 @@ add_compile_options(-Wall
 
 add_definitions(
   # These defines should correspond to
-  # picoruby/build_config/prsh-cortex-m0plus.rb
+  # picoruby/build_config/r2p2-cortex-m0plus.rb
   -DNDEBUG
   -DMRBC_REQUIRE_32BIT_ALIGNMENT
   -DMRBC_CONVERT_CRLF
@@ -43,7 +43,7 @@ add_custom_target(mrbdir ALL
   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_SOURCE_DIR}/build/mrb
 )
 
-set(RUBY_FILES prsh_task usb_task)
+set(RUBY_FILES r2p2_task usb_task)
 
 add_dependencies(${PROJECT_NAME}
   mrbdir
@@ -61,7 +61,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 )
 
 target_link_directories(${PROJECT_NAME} PRIVATE
-  ${CMAKE_SOURCE_DIR}/lib/picoruby/build/prsh-cortex-m0plus/lib
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/build/r2p2-cortex-m0plus/lib
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
@@ -79,8 +79,8 @@ include_directories(${PROJECT_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/lib/picoruby/include/hal_no_impl
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mrubyc/repos/mrubyc/src
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-filesystem-fat/lib/ff14b/source
-  ${CMAKE_SOURCE_DIR}/lib/picoruby/build/prsh-cortex-m0plus/mrbgems
-  ${CMAKE_SOURCE_DIR}/lib/picoruby/build/repos/prsh-cortex-m0plus/mruby-pico-compiler/include
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/build/r2p2-cortex-m0plus/mrbgems
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/build/repos/r2p2-cortex-m0plus/mruby-pico-compiler/include
 )
 
 pico_add_extra_outputs(${PROJECT_NAME})

@@ -10,7 +10,7 @@
 #include <picogem_init.c>
 
 #include "../include/io_rp2040.h"
-#include "../build/mrb/prsh_task.c"
+#include "../build/mrb/r2p2_task.c"
 #include "../build/mrb/usb_task.c"
 
 #ifndef HEAP_SIZE
@@ -38,7 +38,7 @@ main(void)
   mrbc_define_method(0, mrbc_class_object, "tud_task", c_tud_task);
   mrbc_require_init();
   mrbc_create_task(usb_task, 0);
-  mrbc_create_task(prsh_task, 0);
+  mrbc_create_task(r2p2_task, 0);
   mrbc_run();
   return 0;
 }
