@@ -1,11 +1,4 @@
-require "sandbox"
 require "shell"
-require "filesystem-fat"
-require "vfs"
-require "vim"
-
-ENV = {}
-ARGV = []
 
 File = MyFile
 Dir = MyDir
@@ -14,10 +7,8 @@ def exit
   raise # to restart
 end
 
-IO.wait_and_clear
-FAT._setup(0) # Workaround until Flash ROM works
-
 begin
+  Shell.setup(:flash)
   IO.wait_and_clear
   Shell.new.start(:shell)
 rescue => e
