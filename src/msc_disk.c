@@ -32,15 +32,7 @@
 #include <bsp/board.h>
 #include <tusb.h>
 
-// Totally workaround until Flash ROM works
-//#define PICORUBY_MOUNT_RAM_MSC
-#ifdef PICORUBY_MOUNT_RAM_MSC
-#include <alloc.h>
-#include "../lib/picoruby/mrbgems/picoruby-filesystem-fat/src/hal/ram_disk.h"
-#define FLASH_MMAP_ADDR ram_disk
-#else
 #include "flash_disk.h"
-#endif /* PICORUBY_MOUNT_RAM_MSC */
 
 #ifndef PICORUBY_NO_MSC
 
@@ -65,9 +57,6 @@ tud_msc_inquiry_cb(uint8_t lun, uint8_t vendor_id[8], uint8_t product_id[16], ui
 bool
 tud_msc_test_unit_ready_cb(uint8_t lun)
 {
-#ifdef PICORUBY_MOUNT_RAM_MSC
-  if (!ram_disk) return false;
-#endif
   if (ejected) {
     tud_msc_set_sense(lun, SCSI_SENSE_NOT_READY, 0x3a, 0x00);
     return false;
@@ -130,9 +119,6 @@ tud_msc_is_writable_cb(uint8_t lun)
 int32_t
 tud_msc_write10_cb(uint8_t lun, uint32_t lba, uint32_t offset, uint8_t* buffer, uint32_t bufsize)
 {
-#ifdef PICORUBY_MOUNT_RAM_MSC
-  memcpy(ram_disk + lba * SECTOR_SIZE + offset, buffer, bufsize);
-#else
   if (lba >= SECTOR_COUNT) return -1;
   uint32_t ints = save_and_disable_interrupts();
   if (offset == 0) {
@@ -140,7 +126,6 @@ tud_msc_write10_cb(uint8_t lun, uint32_t lba, uint32_t offset, uint8_t* buffer, 
   }
   flash_range_program(FLASH_TARGET_OFFSET + lba * SECTOR_SIZE + offset, buffer, bufsize);
   restore_interrupts(ints);
-#endif
   return bufsize;
 }
 
