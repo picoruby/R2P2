@@ -1,4 +1,10 @@
-/* 
+/*
+ * Copyright (c) 2022 HASUMI Hitoshi | MIT License
+ *
+ * This program was originally written under the copyright below
+ * and modified by the author.
+ */
+/*
  * The MIT License (MIT)
  *
  * Copyright (c) 2019 Ha Thach (tinyusb.org)
@@ -231,7 +237,7 @@ char const* string_desc_arr [] =
 {
   (const char[]) { 0x09, 0x04 }, // 0: is supported language is English (0x0409)
   "PicoRuby",                    // 1: Manufacturer
-  "PicoRuby R2P2",               // 2: Product
+  "R2P2",                        // 2: Product
   "123456789012",                // 3: Serials, should use chip ID
   "PicoRuby CDC",                // 4: CDC Interface
   "PicoRuby MSC",                // 5: MSC Interface

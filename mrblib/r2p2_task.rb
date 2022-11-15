@@ -1,11 +1,11 @@
 require "shell"
 
-File = MyFile
-Dir = MyDir
-
 def exit
   raise # to restart
 end
+
+ENV['PATH'] = ["/bin"]
+ENV['HOME'] = "/home"
 
 begin
   Shell.setup(:flash)
