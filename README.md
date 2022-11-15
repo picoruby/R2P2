@@ -25,9 +25,17 @@ Anyway, it seems almost problems on the terminal emulator come from CR/LF handli
 
 ## Demonstration
 
-Presentation video is coming soon from RubyWorld Conference 2022.
+### Opening crawl
 
-[Slide](https://slide.rabbit-shocker.org/authors/hasumikin/RubyWorldConference2022/)
+<a href="https://youtu.be/JfN5BpTCYOw" target="_blank"><img src="https://raw.githubusercontent.com/picoruby/R2P2/master/doc/images/openingcralw.png" width="360" /></a>
+
+### Presentation video
+
+The main presentation video is coming soon from RubyWorld Conference 2022.
+
+### Presentation slide
+
+<a href="https://slide.rabbit-shocker.org/authors/hasumikin/RubyWorldConference2022/" target="_blank"><img src="https://raw.githubusercontent.com/picoruby/R2P2/master/doc/images/slidecover.png" width="360" /></a>
 
 ## Build and development
 
