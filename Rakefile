@@ -48,6 +48,9 @@ task :clean do
   FileUtils.cd "lib/picoruby" do
     sh "MRUBY_CONFIG=#{MRUBY_CONFIG} rake clean"
   end
+  FileUtils.cd "build" do
+    FileUtils.rm_rf Dir.glob("R2P2*.*")
+  end
   begin
     sh "cmake --build build --target clean"
   rescue => e
