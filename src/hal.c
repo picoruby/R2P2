@@ -16,7 +16,7 @@
 #define ALARM_IRQ 0
 
 #ifndef MRBC_TICK_UNIT
-#define MRBC_TICK_UNIT=1
+#define MRBC_TICK_UNIT 1
 #endif
 
 #ifndef MRBC_NO_TIMER
