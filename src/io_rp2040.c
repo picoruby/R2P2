@@ -2,7 +2,7 @@
 
 #include <mrubyc.h>
 
-#include "../lib/picoruby/mrbgems/picoruby-io/src/hal/hal.h"
+#include "../lib/picoruby/mrbgems/picoruby-io-console/src/hal/hal.h"
 
 void
 c_raw_bang(mrb_vm *vm, mrb_value *v, int argc)
