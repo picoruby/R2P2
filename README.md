@@ -31,7 +31,7 @@ Anyway, it seems almost problems on the terminal emulator come from CR/LF handli
 
 ### Presentation video
 
-The main presentation video is coming soon from RubyWorld Conference 2022.
+The presentation video (JA) from RubyWorld Conference 2022: [Link](https://youtu.be/rSBnpxzB4d8?t=11040)
 
 ### Presentation slide
 
