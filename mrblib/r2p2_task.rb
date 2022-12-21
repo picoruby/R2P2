@@ -4,7 +4,7 @@ def exit
   raise # to restart
 end
 
-ENV['PATH'] = ["/bin"]
+ENV['PATH'] = "/bin"
 ENV['HOME'] = "/home"
 
 begin
