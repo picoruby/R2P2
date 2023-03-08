@@ -36,7 +36,10 @@ add_definitions(
 )
 
 file(GLOB SRCS src/*.c)
-add_executable(${PROJECT_NAME} ${SRCS})
+add_executable(${PROJECT_NAME}
+  ${SRCS}
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-filesystem-fat/ports/rp2040/flash_disk.c
+)
 
 set(PICORBC ${CMAKE_SOURCE_DIR}/lib/picoruby/bin/picorbc)
 

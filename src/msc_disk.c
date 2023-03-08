@@ -32,7 +32,7 @@
 #include <bsp/board.h>
 #include <tusb.h>
 
-#include "flash_disk.h"
+#include "msc_disk.h"
 
 #ifndef PICORUBY_NO_MSC
 
