@@ -39,6 +39,10 @@ file(GLOB SRCS src/*.c)
 add_executable(${PROJECT_NAME}
   ${SRCS}
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-filesystem-fat/ports/rp2040/flash_disk.c
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-gpio/ports/rp2040/gpio.c
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-i2c/ports/rp2040/i2c.c
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-spi/ports/rp2040/spi.c
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-adc/ports/rp2040/adc.c
 )
 
 set(PICORBC ${CMAKE_SOURCE_DIR}/lib/picoruby/bin/picorbc)
@@ -74,6 +78,9 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   tinyusb_device
   tinyusb_board
   hardware_flash
+  hardware_adc
+  hardware_i2c
+  hardware_spi
   mruby
 )
 
