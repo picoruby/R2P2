@@ -21,12 +21,16 @@ task :libmruby => "lib/picoruby" do
   end
 end
 
+def select_msc
+  ENV['MSC']&.downcase == 'sd' ? "PICORUBY_MSC_SD=yes" : "PICORUBY_MSC_FLASH=yes"
+end
+
 task :cmake_debug do
-  sh "cmake -DCMAKE_BUILD_TYPE=Debug -B build"
+  sh "#{select_msc} cmake -DCMAKE_BUILD_TYPE=Debug -B build"
 end
 
 task :cmake_production do
-  sh "cmake -B build"
+  sh "#{select_msc} cmake -DCMAKE_BUILD_TYPE=Release -B build"
 end
 
 task :check_pico_sdk => :check_pico_sdk_path do

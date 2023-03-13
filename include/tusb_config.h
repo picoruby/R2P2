@@ -3,6 +3,8 @@
  *
  * Copyright (c) 2019 Ha Thach (tinyusb.org)
  *
+ * Modification Copyright (c) 2032 HASUMI Hitoshi
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -110,7 +112,13 @@
 #define CFG_TUD_CDC_EP_BUFSIZE   (TUD_OPT_HIGH_SPEED ? 512 : 64)
 
 // MSC Buffer size of Device Mass storage
-#define CFG_TUD_MSC_EP_BUFSIZE   512
+#if defined(PICORUBY_MSC_FLASH)
+  #define CFG_TUD_MSC_EP_BUFSIZE   4096
+#elif defined(PICORUBY_MSC_SD)
+  #define CFG_TUD_MSC_EP_BUFSIZE    512
+#else
+  #error PICORUBY_MSC_devicename must be defined
+#endif
 
 #ifdef __cplusplus
  }
