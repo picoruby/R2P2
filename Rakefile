@@ -17,6 +17,7 @@ end
 
 task :libmruby => "lib/picoruby" do
   FileUtils.cd "lib/picoruby" do
+    sh "rake test"
     sh "MRUBY_CONFIG=#{MRUBY_CONFIG} rake"
   end
 end
