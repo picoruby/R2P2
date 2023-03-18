@@ -35,7 +35,8 @@ main(void)
 
   mrbc_init(heap_pool, HEAP_SIZE);
   mrbc_io_rp2040_init();
-  mrbc_define_method(0, mrbc_class_object, "tud_task", c_tud_task);
+  mrbc_class *mrbc_class_USB = mrbc_define_class(0, "USB", mrbc_class_object);
+  mrbc_define_method(0, mrbc_class_USB, "tud_task", c_tud_task);
   picoruby_init_require();
   mrbc_create_task(usb_task, 0);
   mrbc_create_task(r2p2_task, 0);
