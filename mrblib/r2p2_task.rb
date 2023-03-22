@@ -21,7 +21,7 @@ begin
     sleep 1
     retry
   end
-  unless VFS::VOLUMES.any?{|v| v[:driver].device == :sd }
+  unless VFS::VOLUMES.any?{|v| v[:driver].prefix == "sd:" }
     spi = SPI.new(
             unit: :RP2040_SPI0,
             frequency: 5_000_000,
