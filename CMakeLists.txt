@@ -56,6 +56,7 @@ add_executable(${PROJECT_NAME}
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-i2c/ports/rp2040/i2c.c
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-spi/ports/rp2040/spi.c
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-adc/ports/rp2040/adc.c
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-uart/ports/rp2040/uart.c
 )
 
 set(PICORBC ${CMAKE_SOURCE_DIR}/lib/picoruby/bin/picorbc)
@@ -92,6 +93,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   tinyusb_board
   hardware_flash
   hardware_adc
+  hardware_uart
   hardware_i2c
   hardware_spi
   mruby
