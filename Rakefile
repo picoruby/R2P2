@@ -1,6 +1,6 @@
 require "fileutils"
 
-PICO_SDK_TAG = "1.5.0"
+PICO_SDK_TAG = "1.5.1"
 
 def mruby_config
   ENV['BOARD']&.downcase == 'pico_w' ? 'r2p2_w-cortex-m0plus' : 'r2p2-cortex-m0plus'
