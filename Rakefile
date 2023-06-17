@@ -1,7 +1,17 @@
 require "fileutils"
 
-MRUBY_CONFIG = "r2p2-cortex-m0plus"
 PICO_SDK_TAG = "1.5.0"
+
+def mruby_config
+  ENV['BOARD']&.downcase == 'pico_w' ? 'r2p2_w-cortex-m0plus' : 'r2p2-cortex-m0plus'
+end
+
+def select_flags
+  flags = []
+  flags << (ENV['MSC']&.downcase == 'sd' ? "PICORUBY_MSC_SD=yes" : "PICORUBY_MSC_FLASH=yes")
+  flags << (ENV['BOARD']&.downcase == 'pico_w' ? "PICO_W=yes" : "")
+  flags.join(" ")
+end
 
 task :default => :all
 
@@ -18,20 +28,16 @@ end
 task :libmruby => "lib/picoruby" do
   FileUtils.cd "lib/picoruby" do
     sh "rake test"
-    sh "MRUBY_CONFIG=#{MRUBY_CONFIG} rake"
+    sh "MRUBY_CONFIG=#{mruby_config} rake"
   end
 end
 
-def select_msc
-  ENV['MSC']&.downcase == 'sd' ? "PICORUBY_MSC_SD=yes" : "PICORUBY_MSC_FLASH=yes"
-end
-
 task :cmake_debug do
-  sh "#{select_msc} cmake -DCMAKE_BUILD_TYPE=Debug -B build"
+  sh "#{select_flags} cmake -DCMAKE_BUILD_TYPE=Debug -B build"
 end
 
 task :cmake_production do
-  sh "#{select_msc} cmake -DCMAKE_BUILD_TYPE=Release -B build"
+  sh "#{select_flags} cmake -DCMAKE_BUILD_TYPE=Release -B build"
 end
 
 task :check_pico_sdk => :check_pico_sdk_path do
@@ -62,7 +68,7 @@ end
 desc "deep clean built"
 task :deep_clean do
   FileUtils.cd "lib/picoruby" do
-    sh "MRUBY_CONFIG=#{MRUBY_CONFIG} rake deep_clean"
+    sh "MRUBY_CONFIG=#{mruby_config} rake deep_clean"
   end
   FileUtils.cd "build" do
     FileUtils.rm_rf "*"
@@ -72,7 +78,7 @@ end
 desc "clean built"
 task :clean do
   FileUtils.cd "lib/picoruby" do
-    sh "MRUBY_CONFIG=#{MRUBY_CONFIG} rake clean"
+    sh "MRUBY_CONFIG=#{mruby_config} rake clean"
   end
   FileUtils.cd "build" do
     FileUtils.rm_rf Dir.glob("R2P2*.*")

@@ -4,8 +4,6 @@ cmake_minimum_required(VERSION 3.24)
 
 include(pico_sdk_import.cmake)
 
-#set(PICO_EXAMPLES_PATH ${PROJECT_SOURCE_DIR})
-
 # Initialize the SDK
 pico_sdk_init()
 
@@ -15,6 +13,7 @@ execute_process (COMMAND git describe --tags --abbrev=0 OUTPUT_VARIABLE CMAKE_VE
 set (R2P2_VERSION   ${CMAKE_VERSION_NUMBER})
 set (R2P2_BUILDDATE ${CMAKE_BUILDDATE})
 set (R2P2_REVISION  ${CMAKE_REVISION})
+
 if(DEFINED ENV{PICORUBY_MSC_FLASH})
   set (MSC_NAME FLASH_MSC)
   add_definitions(-DPICORUBY_MSC_FLASH)
@@ -26,7 +25,17 @@ elseif(DEFINED ENV{PICORUBY_MSC_SD})
 else()
   message(FATAL_ERROR "PICORUBY_MSC_xxxx is not defined.")
 endif()
-project("R2P2-${MSC_NAME}-${R2P2_VERSION}-${R2P2_BUILDDATE}-${R2P2_REVISION}")
+
+if(DEFINED ENV{PICO_W})
+  set(PICO_BOARD pico_w)
+  set (R2P2_NAME R2P2_W)
+  set (BUILD_CONFIG r2p2_w-cortex-m0plus)
+else()
+  set (R2P2_NAME R2P2)
+  set (BUILD_CONFIG r2p2-cortex-m0plus)
+endif()
+
+project("${R2P2_NAME}-${MSC_NAME}-${R2P2_VERSION}-${R2P2_BUILDDATE}-${R2P2_REVISION}")
 
 add_compile_options(-Wall
   # int != int32_t as far as the compiler is concerned because gcc has int32_t as long int
@@ -37,7 +46,7 @@ add_compile_options(-Wall
 
 add_definitions(
   # These defines should not contradict defines in
-  # picoruby/build_config/r2p2-cortex-m0plus.rb
+  # picoruby/build_config/${BUILD_CONFIG}.rb
   -DNDEBUG
   -DMRBC_REQUIRE_32BIT_ALIGNMENT
   -DMRBC_CONVERT_CRLF
@@ -47,7 +56,7 @@ add_definitions(
 )
 
 file(GLOB SRCS src/*.c)
-add_executable(${PROJECT_NAME}
+set(SOURCE_FILES
   ${SRCS}
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-filesystem-fat/ports/rp2040/flash_disk.c
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-filesystem-fat/ports/rp2040/sd_disk.c
@@ -57,6 +66,14 @@ add_executable(${PROJECT_NAME}
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-spi/ports/rp2040/spi.c
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-adc/ports/rp2040/adc.c
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-uart/ports/rp2040/uart.c
+)
+if(DEFINED ENV{PICO_W})
+  list(APPEND SOURCE_FILES
+    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/ports/rp2040/ble.c
+  )
+endif()
+add_executable(${PROJECT_NAME}
+  ${SOURCE_FILES}
 )
 
 set(PICORBC ${CMAKE_SOURCE_DIR}/lib/picoruby/bin/picorbc)
@@ -83,7 +100,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 )
 
 target_link_directories(${PROJECT_NAME} PRIVATE
-  ${CMAKE_SOURCE_DIR}/lib/picoruby/build/r2p2-cortex-m0plus/lib
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/build/${BUILD_CONFIG}/lib
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
@@ -99,14 +116,29 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   mruby
 )
 
+if(DEFINED ENV{PICO_W})
+  target_link_libraries(${PROJECT_NAME} PRIVATE
+    pico_btstack_ble
+    pico_btstack_cyw43
+    pico_cyw43_arch_none
+  )
+  pico_btstack_make_gatt_header(${PROJECT_NAME} PRIVATE
+    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/ports/rp2040/gatt.gatt
+  )
+  target_include_directories(${PROJECT_NAME} PRIVATE
+    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/include
+  )
+endif()
+
+
 target_include_directories(${PROJECT_NAME} PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}
   ${PICO_SDK_PATH}/src/rp2_common/pico_stdio_usb/include
   ${CMAKE_SOURCE_DIR}/lib/picoruby/include/hal_no_impl
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mrubyc/repos/mrubyc/src
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-filesystem-fat/lib/ff14b/source
-  ${CMAKE_SOURCE_DIR}/lib/picoruby/build/r2p2-cortex-m0plus/mrbgems
-  ${CMAKE_SOURCE_DIR}/lib/picoruby/build/repos/r2p2-cortex-m0plus/mruby-pico-compiler/include
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/build/${BUILD_CONFIG}/mrbgems
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/build/repos/${BUILD_CONFIG}/mruby-pico-compiler/include
 )
 
 pico_add_extra_outputs(${PROJECT_NAME})
@@ -117,3 +149,4 @@ add_custom_command(
   COMMAND gzip -kf ${PROJECT_NAME}.uf2
   COMMAND zip -r ${PROJECT_NAME}.uf2.zip ${PROJECT_NAME}.uf2
 )
+
