@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.24)
 #set(CMAKE_VERBOSE_MAKEFILE ON)
 
 include(pico_sdk_import.cmake)
+include(pico_extras_import.cmake)
 
 # Initialize the SDK
 pico_sdk_init()
@@ -66,6 +67,7 @@ set(SOURCE_FILES
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-spi/ports/rp2040/spi.c
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-adc/ports/rp2040/adc.c
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-uart/ports/rp2040/uart.c
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-machine/ports/rp2040/machine.c
 )
 if(DEFINED ENV{PICO_W})
   list(APPEND SOURCE_FILES
@@ -113,6 +115,9 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   hardware_uart
   hardware_i2c
   hardware_spi
+  pico_runtime
+  hardware_sleep
+  hardware_rtc
   mruby
 )
 

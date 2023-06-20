@@ -1,3 +1,5 @@
+require "machine"
+require "task"
 require "shell"
 
 IO.wait_and_clear
