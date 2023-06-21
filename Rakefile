@@ -13,6 +13,10 @@ def select_flags
   flags.join(" ")
 end
 
+def def_board
+  ENV['BOARD']&.downcase == 'pico_w' ? '-DPICO_BOARD=pico_w' : ''
+end
+
 task :default => :all
 
 desc "build production"
@@ -32,12 +36,16 @@ task :libmruby => "lib/picoruby" do
   end
 end
 
+def cmake_cmd(env)
+  "#{select_flags} cmake #{def_board} -DCMAKE_BUILD_TYPE=#{env} -B build"
+end
+
 task :cmake_debug do
-  sh "#{select_flags} cmake -DCMAKE_BUILD_TYPE=Debug -B build"
+  sh cmake_cmd("Debug")
 end
 
 task :cmake_production do
-  sh "#{select_flags} cmake -DCMAKE_BUILD_TYPE=Release -B build"
+  sh cmake_cmd("Release")
 end
 
 task :check_pico_sdk => :check_pico_sdk_path do
