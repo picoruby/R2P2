@@ -127,9 +127,6 @@ if(DEFINED ENV{PICO_W})
     pico_btstack_cyw43
     pico_cyw43_arch_none
   )
-  pico_btstack_make_gatt_header(${PROJECT_NAME} PRIVATE
-    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/ports/rp2040/gatt.gatt
-  )
   target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/include
   )
