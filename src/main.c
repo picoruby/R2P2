@@ -14,7 +14,7 @@
 #include "../build/mrb/usb_task.c"
 
 #ifndef HEAP_SIZE
-#define HEAP_SIZE (1024 * 190)
+#define HEAP_SIZE (1024 * 194)
 #endif
 
 int loglevel = LOGLEVEL_ERROR;
