@@ -3,13 +3,11 @@ require "task"
 require "shell"
 require "spi"
 
-IO.wait_and_clear(timeout: 3)
-
 # Setup flash disk
 begin
-  $shell = Shell.new
-  print "Initializing FLASH disk as the root volume... "
-  $shell.setup_root_volume(:flash, label: "FLASH")
+  $shell = Shell.new(clean: true)
+  puts "Initializing FLASH disk as the root volume... "
+  $shell.setup_root_volume(:flash, label: "R2P2")
   $shell.setup_system_files
   ENV['PATH'] = "/bin"
   ENV['HOME'] = "/home"
