@@ -27,9 +27,9 @@ begin
     Shell::Command.new.exec("/home/app.rb")
   end
   # Start shell if terminal is available
-  IO.wait_and_clear
-  $shell.show_logo
+  IO.wait_terminal
   puts "Starting shell...\n\n"
+  $shell.show_logo
   $shell.start
 rescue => e
   puts "#{e.message} (#{e.class})"
