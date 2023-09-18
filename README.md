@@ -43,7 +43,9 @@ The presentation video (JA) from RubyWorld Conference 2022: [Link](https://youtu
 
 - git
 - pico-sdk including tinyusb
+- pico-sdk including btstack (for pico_w)
 - env PICO_SDK_PATH
+- env PICO_EXTRAS_PATH
 - ruby (CRuby)
 - cmake
 - arm-none-eabi-gcc
