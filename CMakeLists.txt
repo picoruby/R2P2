@@ -54,6 +54,7 @@ add_definitions(
   -DMRBC_USE_MATH
   -DMRBC_TICK_UNIT=1
   -DMRBC_TIMESLICE_TICK_COUNT=10
+  -DMRBC_USE_FLOAT=2
 )
 
 file(GLOB SRCS src/*.c)

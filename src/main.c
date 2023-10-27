@@ -8,6 +8,7 @@
 /* PicoRuby */
 #include <picorbc.h>
 #include <picogem_init.c>
+#include <executables_init.c>
 
 #include "../include/io_rp2040.h"
 #include "../build/mrb/r2p2_task.c"
@@ -38,6 +39,7 @@ main(void)
   mrbc_class *mrbc_class_USB = mrbc_define_class(0, "USB", mrbc_class_object);
   mrbc_define_method(0, mrbc_class_USB, "tud_task", c_tud_task);
   picoruby_init_require();
+  picoruby_init_executables();
   mrbc_create_task(usb_task, 0);
   mrbc_create_task(r2p2_task, 0);
   mrbc_run();

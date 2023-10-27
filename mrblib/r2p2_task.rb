@@ -1,3 +1,4 @@
+PicoGem.require "require"
 require "machine"
 require "task"
 require "shell"
@@ -9,8 +10,6 @@ begin
   puts "Initializing FLASH disk as the root volume... "
   $shell.setup_root_volume(:flash, label: "R2P2")
   $shell.setup_system_files
-  ENV['PATH'] = "/bin"
-  ENV['HOME'] = "/home"
   Dir.chdir("/home")
   puts "Available"
 rescue => e
