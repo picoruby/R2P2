@@ -1,4 +1,3 @@
-PicoGem.require "require"
 require "machine"
 require "task"
 require "shell"
