@@ -27,7 +27,47 @@ Anyway, it seems almost problems on the terminal emulator come from CR/LF handli
 
 ### Opening crawl
 
-<a href="https://youtu.be/JfN5BpTCYOw" target="_blank"><img src="https://raw.githubusercontent.com/picoruby/R2P2/master/doc/images/openingcralw.png" width="360" /></a>
+<a href="https://youtu.be/JfN5BpTCYOw"><img src="https://raw.githubusercontent.com/picoruby/R2P2/master/doc/images/openingcralw.png" width="360" /></a>
+
+### Tutorial short clips
+
+#### Part 1
+
+1. <a href="https://youtu.be/s4M4rBnPSus">Preparation | https://youtu.be/s4M4rBnPSus</a>
+  - Install R2P2 into Raspberry Pi Pico.
+  - Open R2P2 in a terminal emulator.
+
+2. <a href="https://youtu.be/ISU6TbIoIlQ">R2P2 shell | https://youtu.be/ISU6TbIoIlQ</a>
+  - Use some shell commands to see a filesystem working on R2P2.
+
+3. <a href="https://youtu.be/2ZKpOOjzKJc">Hello World! | https://youtu.be/2ZKpOOjzKJc</a>
+  - Run some small Ruby scripts in IRB.
+
+#### Part 2
+
+1. <a href="https://youtu.be/qbs25xDu7t8">GPIO | https://youtu.be/qbs25xDu7t8</a>
+  - Blink the on-board LED of Raspberry Pi Pico using the GPIO class of PicoRuby.
+
+2. <a href="https://youtu.be/dPGCyQrX6Zg">ADC | https://youtu.be/dPGCyQrX6Zg</a>
+  - Measure the temperature using Pi Pico's on-chip ADC with the ADC class of PicoRuby.
+
+#### Part 3
+
+1. <a href="https://youtu.be/PVkP_uNBOo0">IRB deeper | https://youtu.be/PVkP_uNBOo0</a>
+  - Use the multi-line editor feature of IRB.
+
+2. <a href="https://youtu.be/0uj4m4RI7lE">Time class | https://youtu.be/0uj4m4RI7lE</a>
+  - Set the current time in the RTC of Pi Pico.
+  - Confirm the `date` command in the shell is implemented with the Time class of PicoRuby.
+
+3. <a href="https://youtu.be/X1RdA6IE780">Text editor | https://youtu.be/X1RdA6IE780</a>
+  - Create a Ruby script with the Vim-like text editor and execute it.
+
+4. <a href="https://youtu.be/7nHNEUZnuKQ">Drag and Drop | https://youtu.be/7nHNEUZnuKQ</a>
+  - Drag and drop a Ruby script that is written outside R2P2 and execute it.
+
+5. <a href="https://youtu.be/6_RomLChvYE">/home/app.rb | https://youtu.be/6_RomLChvYE</a>
+  - Make Pi Pico an autostart device by writing /home/app.rb file.
 
 ### Presentation video
 
@@ -35,7 +75,7 @@ The presentation video (JA) from RubyWorld Conference 2022: [Link](https://youtu
 
 ### Presentation slide
 
-<a href="https://slide.rabbit-shocker.org/authors/hasumikin/RubyWorldConference2022/" target="_blank"><img src="https://raw.githubusercontent.com/picoruby/R2P2/master/doc/images/slidecover.png" width="360" /></a>
+<a href="https://slide.rabbit-shocker.org/authors/hasumikin/RubyWorldConference2022/"><img src="https://raw.githubusercontent.com/picoruby/R2P2/master/doc/images/slidecover.png" width="360" /></a>
 
 ## Build and development
 
