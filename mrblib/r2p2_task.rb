@@ -1,7 +1,12 @@
 require "machine"
+require "watchdog"
 require "task"
 require "shell"
 require "spi"
+
+# Not to break symbol table
+# FIXME: Fix Sandbox class to remove this workaround
+require "vim"
 
 # Setup flash disk
 begin
@@ -9,8 +14,6 @@ begin
   puts "Initializing FLASH disk as the root volume... "
   $shell.setup_root_volume(:flash, label: "R2P2")
   $shell.setup_system_files
-  ENV['PATH'] = "/bin"
-  ENV['HOME'] = "/home"
   Dir.chdir("/home")
   puts "Available"
 rescue => e
@@ -18,7 +21,6 @@ rescue => e
   puts "#{e.message} (#{e.class})"
 end
 
-$reboot_count = 0
 begin
   puts "Press 's' to skip running app.mrb or app.rb"
   skip = false
@@ -47,12 +49,6 @@ begin
 rescue => e
   puts "#{e.message} (#{e.class})"
   puts "Rebooting"
-  sleep 1
-  if $reboot_count < 10
-    $reboot_count += 1
-    retry
-  else
-    puts "Rebooting count hit the limit. Aborting."
-  end
+  Watchdog.reboot(1000)
 end
 
