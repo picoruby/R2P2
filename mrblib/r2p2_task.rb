@@ -4,10 +4,6 @@ require "task"
 require "shell"
 require "spi"
 
-# Not to break symbol table
-# FIXME: Fix Sandbox class to remove this workaround
-require "vim"
-
 # Setup flash disk
 begin
   $shell = Shell.new(clean: true)
@@ -19,6 +15,13 @@ begin
 rescue => e
   puts "Not available"
   puts "#{e.message} (#{e.class})"
+end
+
+# Putting this before the shell setup causes the shell to hang
+begin
+  require "cyw43"
+rescue LoadError
+  # Ignore. Maybe not Pico W
 end
 
 begin
@@ -44,8 +47,10 @@ begin
   # Start shell if terminal is available
   IO.wait_terminal
   puts "Starting shell...\n\n"
+
   $shell.show_logo
   $shell.start
+
 rescue => e
   puts "#{e.message} (#{e.class})"
   puts "Rebooting"
