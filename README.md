@@ -102,6 +102,7 @@ Docker will solve it (TODO).
 ```
 git clone https://github.com/picoruby/R2P2.git
 cd R2P2
+rake setup
 rake
 ```
 
