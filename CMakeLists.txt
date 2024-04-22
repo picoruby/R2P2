@@ -135,7 +135,7 @@ if(DEFINED ENV{PICO_W})
   target_link_libraries(${PROJECT_NAME} PRIVATE
     pico_btstack_ble
     pico_btstack_cyw43
-    pico_cyw43_arch_none
+    pico_cyw43_arch_lwip_threadsafe_background
   )
   target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/include
