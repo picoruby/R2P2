@@ -137,6 +137,8 @@ if(DEFINED ENV{PICO_W})
     pico_btstack_ble
     pico_btstack_cyw43
     pico_cyw43_arch_lwip_threadsafe_background
+    pico_lwip_mbedtls
+    pico_mbedtls
   )
   target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/include
