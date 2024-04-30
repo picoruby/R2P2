@@ -40,4 +40,10 @@
 
 #define MBEDTLS_SSL_PROTO_TLS1_2
 
+#define MBEDTLS_CIPHER_PADDING_PKCS7
+#define MBEDTLS_CIPHER_MODE_GCM
+#define MBEDTLS_GCM_C
+
+#define PICORUBY_MBEDTLS_USE_R2P2_CONFIG
+
 #include "mbedtls/check_config.h"
