@@ -56,15 +56,22 @@ task :cmake_production do
 end
 
 task :check_pico_sdk => :check_pico_sdk_path do
-  %w(PICO_SDK_PATH PICO_EXTRAS_PATH).each do |env|
-    FileUtils.cd ENV[env] do
-      unless `git status --branch`.split("\n")[0].end_with?(PICO_SDK_TAG)
-        raise <<~MSG
-          pico-sdk #{PICO_SDK_TAG} is not checked out!\n
-          Tips for dealing with:\n
-          cd $PICO_SDK_PATH && git pull && git checkout #{PICO_SDK_TAG} && git submodule update --recursive\n
-        MSG
-      end
+  FileUtils.cd ENV['PICO_SDK_PATH'] do
+    unless `git status --branch`.split("\n")[0].end_with?(PICO_SDK_TAG)
+      raise <<~MSG
+        pico-sdk #{PICO_SDK_TAG} is not checked out!\n
+        Tips for dealing with:\n
+        cd $PICO_SDK_PATH && git pull && git checkout #{PICO_SDK_TAG} && git submodule update --recursive\n
+      MSG
+    end
+  end
+  FileUtils.cd ENV['PICO_EXTRAS_PATH'] do
+    unless `git status --branch`.split("\n")[0].end_with?(PICO_SDK_TAG)
+      raise <<~MSG
+        pico-extras sdk-#{PICO_SDK_TAG} is not checked out!\n
+        Tips for dealing with:\n
+        cd $PICO_EXTRAS_PATH && git pull && git checkout sdk-#{PICO_SDK_TAG} && git submodule update --recursive\n
+      MSG
     end
   end
 end
