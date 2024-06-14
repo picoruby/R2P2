@@ -93,11 +93,13 @@ The presentation video (JA) from RubyWorld Conference 2022: [Link](https://youtu
 - qemu-arm-static
 
 The author is working on WSL2-Ubuntu (x86-64 Windows host) and Ubuntu (x86-64 native)
+If you are building on macOS, please use `gcc-arm-embedded`.
+
+```
+brew install --cask gcc-arm-embedded
+```
 
 ### Build
-
-Build process below doesn't work on macOS.
-Docker will solve it (TODO).
 
 ```
 git clone https://github.com/picoruby/R2P2.git
