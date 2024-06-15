@@ -93,6 +93,7 @@ The presentation video (JA) from RubyWorld Conference 2022: [Link](https://youtu
 - qemu-arm-static
 
 The author is working on WSL2-Ubuntu (x86-64 Windows host) and Ubuntu (x86-64 native)
+
 If you are building on macOS, please use `gcc-arm-embedded`.
 
 ```
