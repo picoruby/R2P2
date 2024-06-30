@@ -29,8 +29,13 @@ endif()
 
 if(DEFINED ENV{PICO_W})
   set(PICO_BOARD pico_w)
+  if(DEFINED ENV{PICO_W_NETWORK})
+    set(R2P2_NAME R2P2_W_NET)
+    set(BUILD_CONFIG r2p2_w_network-cortex-m0plus)
+  else()
   set (R2P2_NAME R2P2_W)
-  set (BUILD_CONFIG r2p2_w-cortex-m0plus)
+    set(BUILD_CONFIG r2p2_w-cortex-m0plus)
+  endif()
 else()
   set (R2P2_NAME R2P2)
   set (BUILD_CONFIG r2p2-cortex-m0plus)
@@ -83,6 +88,11 @@ if(DEFINED ENV{PICO_W})
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/ports/rp2040/ble_central.c
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/ports/rp2040/net.c
   )
+  if(DEFINED ENV{PICO_W_NETWORK})
+  list(APPEND SOURCE_FILES
+    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/ports/rp2040/net.c
+  )
+  endif()
 endif()
 add_executable(${PROJECT_NAME}
   ${SOURCE_FILES}
@@ -133,13 +143,22 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 )
 
 if(DEFINED ENV{PICO_W})
+  # these libraries are both used in base PICO_W build and the network-enabled build
   target_link_libraries(${PROJECT_NAME} PRIVATE
     pico_btstack_ble
     pico_btstack_cyw43
-    pico_cyw43_arch_lwip_threadsafe_background
-    pico_lwip_mbedtls
-    pico_mbedtls
   )
+  # add target_link_libraries for networking if networking is enabled
+  if(DEFINED ENV{PICO_W_NETWORK})
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+      pico_cyw43_arch_lwip_threadsafe_background
+      pico_lwip_mbedtls
+      pico_mbedtls
+    )
+    target_include_directories(${PROJECT_NAME} PRIVATE
+      ${CMAKE_CURRENT_LIST_DIR}/include-net
+    )
+  endif()
   target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/include
   )

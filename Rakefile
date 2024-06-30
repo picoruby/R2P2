@@ -3,13 +3,26 @@ require "fileutils"
 PICO_SDK_TAG = "1.5.1"
 
 def mruby_config
-  ENV['BOARD']&.downcase == 'pico_w' ? 'r2p2_w-cortex-m0plus' : 'r2p2-cortex-m0plus'
+  if ENV['BOARD']&.downcase == 'pico_w'
+    if ENV['NETWORK']&.downcase == 'yes'
+      'r2p2_w_network-cortex-m0plus'
+    else
+      'r2p2_w-cortex-m0plus'
+    end
+  else
+    'r2p2-cortex-m0plus'
+  end
 end
 
 def select_flags
   flags = []
   flags << (ENV['MSC']&.downcase == 'sd' ? "PICORUBY_MSC_SD=yes" : "PICORUBY_MSC_FLASH=yes")
-  flags << (ENV['BOARD']&.downcase == 'pico_w' ? "PICO_W=yes" : "")
+  if ENV['BOARD']&.downcase == 'pico_w'
+    flags << "PICO_W=yes"
+    if ENV['NETWORK']&.downcase == 'yes'
+      flags << "PICO_W_NETWORK=yes"
+    end
+  end
   flags.join(" ")
 end
 
