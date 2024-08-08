@@ -1,6 +1,7 @@
 require "fileutils"
 
 PICO_SDK_TAG = "1.5.1"
+PICO_EXTRAS_TAG = "sdk-#{PICO_SDK_TAG}"
 
 def mruby_config
   ENV['BOARD']&.downcase == 'pico_w' ? 'r2p2_w-cortex-m0plus' : 'r2p2-cortex-m0plus'
@@ -57,7 +58,7 @@ end
 
 task :check_pico_sdk => :check_pico_sdk_path do
   FileUtils.cd ENV['PICO_SDK_PATH'] do
-    unless `git status --branch`.split("\n")[0].end_with?(PICO_SDK_TAG)
+    if `git describe --tags --exact-match`.chomp != PICO_SDK_TAG
       raise <<~MSG
         pico-sdk #{PICO_SDK_TAG} is not checked out!\n
         Tips for dealing with:\n
@@ -66,11 +67,11 @@ task :check_pico_sdk => :check_pico_sdk_path do
     end
   end
   FileUtils.cd ENV['PICO_EXTRAS_PATH'] do
-    unless `git status --branch`.split("\n")[0].end_with?(PICO_SDK_TAG)
+    if `git describe --tags --exact-match`.chomp != PICO_EXTRAS_TAG
       raise <<~MSG
-        pico-extras sdk-#{PICO_SDK_TAG} is not checked out!\n
+        pico-extras #{PICO_EXTRAS_TAG} is not checked out!\n
         Tips for dealing with:\n
-        cd $PICO_EXTRAS_PATH && git pull && git checkout sdk-#{PICO_SDK_TAG} && git submodule update --recursive\n
+        cd $PICO_EXTRAS_PATH && git pull && git checkout #{PICO_EXTRAS_TAG} && git submodule update --recursive\n
       MSG
     end
   end
