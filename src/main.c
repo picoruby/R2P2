@@ -14,7 +14,13 @@
 #include "../build/mrb/usb_task.c"
 
 #ifndef HEAP_SIZE
+
+#ifdef USE_WIFI
 #define HEAP_SIZE (1024 * 96)
+#else
+#define HEAP_SIZE (1024 * 192)
+#endif
+
 #endif
 
 int loglevel = LOGLEVEL_ERROR;

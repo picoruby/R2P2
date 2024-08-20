@@ -63,6 +63,12 @@ add_definitions(
   -DMRBC_USE_FLOAT=2
 )
 
+if(DEFINED ENV{PICO_W_NETWORK})
+  add_definitions(
+    -DUSE_WIFI
+  )
+endif()
+
 file(GLOB SRCS src/*.c)
 set(SOURCE_FILES
   ${SRCS}
