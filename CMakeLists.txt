@@ -86,7 +86,6 @@ if(DEFINED ENV{PICO_W})
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/ports/rp2040/ble.c
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/ports/rp2040/ble_peripheral.c
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/ports/rp2040/ble_central.c
-    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/ports/rp2040/net.c
   )
   if(DEFINED ENV{PICO_W_NETWORK})
   list(APPEND SOURCE_FILES
@@ -147,16 +146,20 @@ if(DEFINED ENV{PICO_W})
   target_link_libraries(${PROJECT_NAME} PRIVATE
     pico_btstack_ble
     pico_btstack_cyw43
-    pico_mbedtls
   )
   # add target_link_libraries for networking if networking is enabled
   if(DEFINED ENV{PICO_W_NETWORK})
     target_link_libraries(${PROJECT_NAME} PRIVATE
       pico_cyw43_arch_lwip_threadsafe_background
       pico_lwip_mbedtls
+      pico_mbedtls
     )
     target_include_directories(${PROJECT_NAME} PRIVATE
       ${CMAKE_CURRENT_LIST_DIR}/include-net
+    )
+  else()
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+      pico_cyw43_arch_none
     )
   endif()
   target_include_directories(${PROJECT_NAME} PRIVATE
