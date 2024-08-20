@@ -18,7 +18,7 @@
 #ifdef USE_WIFI
 #define HEAP_SIZE (1024 * 96)
 #else
-#define HEAP_SIZE (1024 * 192)
+#define HEAP_SIZE (1024 * 194)
 #endif
 
 #endif
