@@ -4,13 +4,35 @@ PICO_SDK_TAG = "1.5.1"
 PICO_EXTRAS_TAG = "sdk-#{PICO_SDK_TAG}"
 
 def mruby_config
-  ENV['BOARD']&.downcase == 'pico_w' ? 'r2p2_w-cortex-m0plus' : 'r2p2-cortex-m0plus'
+  if ENV['BOARD']&.downcase == 'pico_w'
+    use_wifi = ENV['WIFI']&.downcase == 'yes'
+    use_ble  = ENV['BLE']&.downcase == 'yes'
+    if use_wifi && use_ble
+      'r2p2_w_ble_wifi-cortex-m0plus'
+    elsif use_wifi
+      'r2p2_w_wifi-cortex-m0plus'
+    elsif use_ble
+      'r2p2_w_ble-cortex-m0plus'
+    else
+      raise 'Either BLE or WiFi needs to be enabled for BOARD=pico_w'
+    end
+  else
+    'r2p2-cortex-m0plus'
+  end
 end
 
 def select_flags
   flags = []
   flags << (ENV['MSC']&.downcase == 'sd' ? "PICORUBY_MSC_SD=yes" : "PICORUBY_MSC_FLASH=yes")
-  flags << (ENV['BOARD']&.downcase == 'pico_w' ? "PICO_W=yes" : "")
+  if ENV['BOARD']&.downcase == 'pico_w'
+    flags << "PICO_W=yes"
+    if ENV['WIFI']&.downcase == 'yes'
+      flags << "PICO_W_WIFI=yes"
+    end
+    if ENV['BLE']&.downcase == 'yes'
+      flags << "PICO_W_BLE=yes"
+    end
+  end
   flags.join(" ")
 end
 
