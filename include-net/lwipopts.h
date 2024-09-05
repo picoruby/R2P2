@@ -21,6 +21,18 @@
 #define MEM_LIBC_MALLOC 0
 #endif
 
+#include "mrubyc.h"
+
+// You can show stats by `stats_display();`
+#define LWIP_STATS_DISPLAY 1
+#define LWIP_PLATFORM_DIAG(x) do { console_printf x; } while(0)
+#define S16_F "d"
+#define U16_F "u"
+#define U32_F "ul"
+#define S32_F "ld"
+#define X16_F "04x"
+#define X32_F "08x"
+
 #define MEM_ALIGNMENT 4
 #define MEM_SIZE 4800
 #define MEMP_NUM_TCP_SEG 32
@@ -38,7 +50,7 @@
 #define LWIP_NETIF_LINK_CALLBACK 1
 #define LWIP_NETIF_HOSTNAME 1
 #define LWIP_NETCONN 0
-#define MEM_STATS 0
+#define MEM_STATS 1
 #define SYS_STATS 0
 #define MEMP_STATS 0
 #define LINK_STATS 0
