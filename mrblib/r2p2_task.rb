@@ -1,6 +1,5 @@
 require "machine"
 require "watchdog"
-require "task"
 require "shell"
 require "spi"
 

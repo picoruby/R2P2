@@ -6,7 +6,6 @@
 #include <hardware/clocks.h>
 
 /* PicoRuby */
-#include <picorbc.h>
 #include <picogem_init.c>
 #include <executables_init.c>
 
@@ -23,7 +22,6 @@
 
 #endif
 
-int loglevel = LOGLEVEL_ERROR;
 static uint8_t heap_pool[HEAP_SIZE];
 
 static void
