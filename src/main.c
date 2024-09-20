@@ -15,7 +15,9 @@
 #ifndef HEAP_SIZE
 
 #ifdef USE_WIFI
-#define HEAP_SIZE (1024 * 96)
+#define HEAP_SIZE (1024 * 100)
+//                (1025 * 157) is max size that can be built but it doesn't work well
+// It'd be nice if we can use custom allocator in LwIP
 #else
 #define HEAP_SIZE (1024 * 194)
 #endif
