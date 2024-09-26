@@ -1,6 +1,6 @@
 require "fileutils"
 
-PICO_SDK_TAG = "1.5.1"
+PICO_SDK_TAG = "2.0.0"
 PICO_EXTRAS_TAG = "sdk-#{PICO_SDK_TAG}"
 
 def mruby_config
