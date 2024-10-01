@@ -58,7 +58,6 @@ add_compile_options(-Wall
 add_definitions(
   # These defines should not contradict defines in
   # picoruby/build_config/${BUILD_CONFIG}.rb
-  -DNDEBUG
   -DMRC_CUSTOM_ALLOC
   -DMRBC_REQUIRE_32BIT_ALIGNMENT
   -DMRBC_CONVERT_CRLF
@@ -68,6 +67,16 @@ add_definitions(
   -DMRBC_TIMESLICE_TICK_COUNT=10
   -DMRBC_USE_FLOAT=2
 )
+
+if(DEFINED ENV{PICORUBY_DEBUG})
+  add_definitions(
+    -DPICORUBY_DEBUG
+  )
+else()
+  add_definitions(
+    -DNDEBUG
+  )
+endif()
 
 if(DEFINED ENV{PICO_W_WIFI})
   add_definitions(
