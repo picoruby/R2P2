@@ -117,7 +117,10 @@ if(DEFINED ENV{PICO_W})
   # only used in WiFi build
   if(DEFINED ENV{PICO_W_WIFI})
     list(APPEND SOURCE_FILES
-      ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/ports/rp2040/net.c
+      ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/ports/rp2040/tcp.c
+      ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/ports/rp2040/udp.c
+      ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/ports/rp2040/dns.c
+      ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/ports/rp2040/common.c
     )
   endif()
 endif()
