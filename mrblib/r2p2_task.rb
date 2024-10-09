@@ -41,9 +41,9 @@ begin
     load bootstrap if File.exist?(bootstrap)
     # Execute /home/app.mrb or /home/app.rb
     if File.exist?("/home/app.mrb")
-      Shell::Command.new.exec("/home/app.mrb")
+      load "/home/app.mrb"
     elsif File.exist?("/home/app.rb")
-      Shell::Command.new.exec("/home/app.rb")
+      load "/home/app.rb"
     end
   end
   # Start shell if terminal is available
