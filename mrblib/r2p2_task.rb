@@ -27,7 +27,7 @@ begin
   puts "Press 's' to skip running app.mrb or app.rb"
   skip = false
   10.times do
-    if IO.getch == "s"
+    if IO.getc == "s"
       puts "Skip running app"
       skip = true
       break
