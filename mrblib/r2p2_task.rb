@@ -24,7 +24,8 @@ rescue LoadError
 end
 
 begin
-  puts "Press 's' to skip running app.mrb or app.rb"
+  bootstrap = "/etc/init.d/r2p2"
+  puts "Press 's' to skip #{bootstrap} and app.[mrb|rb]"
   skip = false
   10.times do
     if IO.getc == "s"
@@ -35,7 +36,9 @@ begin
     sleep 0.1
   end
   IO.read_nonblock 1024 # discard remaining input
+
   unless skip
+    load bootstrap if File.exist?(bootstrap)
     # Execute /home/app.mrb or /home/app.rb
     if File.exist?("/home/app.mrb")
       Shell::Command.new.exec("/home/app.mrb")
