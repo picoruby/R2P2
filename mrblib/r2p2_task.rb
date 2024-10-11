@@ -1,7 +1,7 @@
 require "machine"
 require "watchdog"
+Watchdog.disable
 require "shell"
-require "spi"
 
 # Setup flash disk
 begin
@@ -19,33 +19,15 @@ end
 # Putting this before the shell setup causes the shell to hang
 begin
   require "cyw43"
+  ENV['WIFI_MODULE'] = "cwy43"
 rescue LoadError
-  # Ignore. Maybe not Pico W
+  # No WiFi module
 end
 
-begin
-  bootstrap = "/etc/init.d/r2p2"
-  puts "Press 's' to skip #{bootstrap} and app.[mrb|rb]"
-  skip = false
-  10.times do
-    if IO.getc == "s"
-      puts "Skip running app"
-      skip = true
-      break
-    end
-    sleep 0.1
-  end
-  IO.read_nonblock 1024 # discard remaining input
 
-  unless skip
-    load bootstrap if File.exist?(bootstrap)
-    # Execute /home/app.mrb or /home/app.rb
-    if File.exist?("/home/app.mrb")
-      load "/home/app.mrb"
-    elsif File.exist?("/home/app.rb")
-      load "/home/app.rb"
-    end
-  end
+begin
+  $shell.bootstrap("/etc/init.d/r2p2")
+
   # Start shell if terminal is available
   IO.wait_terminal
   puts "Starting shell...\n\n"
