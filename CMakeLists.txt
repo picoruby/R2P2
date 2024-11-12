@@ -65,7 +65,6 @@ add_definitions(
   -DMRBC_USE_MATH
   -DMRBC_TICK_UNIT=1
   -DMRBC_TIMESLICE_TICK_COUNT=10
-  -DMRBC_USE_FLOAT=2
 )
 
 if(DEFINED ENV{PICORUBY_DEBUG})
@@ -100,6 +99,7 @@ set(SOURCE_FILES
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-io-console/ports/rp2040/io-console.c
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-watchdog/ports/rp2040/watchdog.c
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-rng/ports/rp2040/rng.c
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-env/ports/rp2040/env.c
 )
 if(DEFINED ENV{PICO_W})
   # CYW43 is common for both BLE and WiFi

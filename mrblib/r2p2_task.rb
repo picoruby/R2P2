@@ -27,12 +27,9 @@ rescue LoadError
   # No WiFi module
 end
 
-
 begin
   $shell.bootstrap("/etc/init.d/r2p2")
 
-  # Start shell if terminal is available
-#  IO.wait_terminal
   puts "Starting shell...\n\n"
 
   $shell.show_logo
@@ -40,5 +37,6 @@ begin
 
 rescue => e
   puts "#{e.message} (#{e.class})"
+  Watchdog.reboot 1000
 end
 
