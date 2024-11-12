@@ -9,8 +9,8 @@
 #include <picogem_init.c>
 #include <executables_init.c>
 
-#include "../build/mrb/r2p2_task.c"
-#include "../build/mrb/usb_task.c"
+#include "r2p2_task.c"
+#include "usb_task.c"
 
 #ifndef HEAP_SIZE
 

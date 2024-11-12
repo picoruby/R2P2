@@ -1,4 +1,7 @@
-build/
+build_pico/
+build_pico_wifi/
+build_pico_ble/
+build_pico2/
 .rake_tasks~
 tags
 releases/

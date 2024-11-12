@@ -4,43 +4,87 @@ PICO_SDK_TAG = "2.0.0"
 PICO_EXTRAS_TAG = "sdk-#{PICO_SDK_TAG}"
 
 def mruby_config
-  if ENV['BOARD']&.downcase == 'pico_w'
-    use_wifi = ENV['WIFI']&.downcase == 'yes'
-    use_ble  = ENV['BLE']&.downcase == 'yes'
-    if use_wifi && use_ble
-      'r2p2_w_ble_wifi-cortex-m0plus'
-    elsif use_wifi
-      'r2p2_w_wifi-cortex-m0plus'
-    elsif use_ble
-      'r2p2_w_ble-cortex-m0plus'
-    else
-      raise 'Either BLE or WiFi needs to be enabled for BOARD=pico_w'
-    end
+  case ENV['BOARD']&.downcase
+  when 'pico2'
+    'r2p2-cortex-m33'
+  when 'pico_wifi'
+    'r2p2_wifi-cortex-m0plus'
+  when 'pico_ble'
+    'r2p2_ble-cortex-m0plus'
   else
     'r2p2-cortex-m0plus'
   end
 end
 
-def select_flags
+def cmake_flags
   flags = []
   flags << (ENV['MSC']&.downcase == 'sd' ? "PICORUBY_MSC_SD=yes" : "PICORUBY_MSC_FLASH=yes")
-  if ENV['BOARD']&.downcase == 'pico_w'
-    flags << "PICO_W=yes"
-    if ENV['WIFI']&.downcase == 'yes'
-      flags << "PICO_W_WIFI=yes"
-    end
-    if ENV['BLE']&.downcase == 'yes'
-      flags << "PICO_W_BLE=yes"
-    end
+  case ENV['BOARD']&.downcase
+  when 'pico_wifi'
+    flags << "PICO_WIFI=yes"
+  when 'pico_ble'
+    flags << "PICO_BLE=yes"
+  when 'pico2'
+    flags << "PICO2=yes"
   end
   flags.join(" ")
 end
 
 def def_board
-  ENV['BOARD']&.downcase == 'pico_w' ? '-DPICO_BOARD=pico_w' : ''
+  case ENV['BOARD']&.downcase
+  when 'pico2'
+    '-DPICO_PLATFORM=rp2350 -DPICO_BOARD=pico2'
+  when 'pico_wifi', 'pico_ble'
+    '-DPICO_PLATFORM=rp2040 -DPICO_BOARD=pico_w'
+  else
+    '-DPICO_PLATFORM=rp2040 -DPICO_BOARD=pico'
+  end
 end
 
-task :default => :all
+def build_dir
+  case ENV['BOARD']&.downcase
+  when 'pico2'
+    'build_pico2'
+  when 'pico_wifi'
+    'build_pico_wifi'
+  when 'pico_ble'
+    'build_pico_ble'
+  else
+    'build_pico'
+  end
+end
+
+task :default do
+  puts "Specify a task:"
+  puts "  rake pico       # build for RP2040"
+  puts "  rake pico_wifi  # build for RP2040 with CYW43 WiFi"
+  puts "  rake pico_ble   # build for RP2040 with CYW43 BLE"
+  puts "  rake pico2      # build for RP2350"
+end
+
+desc "build for RP2040"
+task :pico do
+  ENV['BOARD'] = 'pico'
+  sh "rake all"
+end
+
+desc "build for RP2040 with CYW43 WiFi"
+task :pico_wifi do
+  ENV['BOARD'] = 'pico_wifi'
+  sh "rake all"
+end
+
+desc "build for RP2040 with CYW43 BLE"
+task :pico_ble do
+  ENV['BOARD'] = 'pico_ble'
+  sh "rake all"
+end
+
+desc "build for RP2350"
+task :pico2 do
+  ENV['BOARD'] = 'pico2'
+  sh "rake all"
+end
 
 task :setup do
   sh "git submodule update --init"
@@ -67,7 +111,7 @@ task :libmruby => "lib/picoruby" do
 end
 
 def cmake_cmd(env)
-  "#{select_flags} cmake #{def_board} -DCMAKE_BUILD_TYPE=#{env} -B build"
+  "#{cmake_flags} cmake #{def_board} -DCMAKE_BUILD_TYPE=#{env} -B #{build_dir}"
 end
 
 task :cmake_debug do
@@ -111,16 +155,18 @@ end
 
 desc "build without cmake preparation"
 task :build => :check_pico_sdk do
-  sh "cmake --build build"
+  sh "cmake --build #{build_dir}"
 end
+
+BUILD_DIRS = %w(build_pico build_pico_wifi build_pico_ble build_pico2)
 
 desc "deep clean built"
 task :deep_clean do
   FileUtils.cd "lib/picoruby" do
     sh "MRUBY_CONFIG=#{mruby_config} rake deep_clean"
   end
-  FileUtils.cd "build" do
-    FileUtils.rm_rf "*"
+  BUILD_DIRS.each do |dir|
+    FileUtils.rm_rf "#{dir}/*"
   end
 end
 
@@ -129,12 +175,12 @@ task :clean do
   FileUtils.cd "lib/picoruby" do
     sh "MRUBY_CONFIG=#{mruby_config} rake clean"
   end
-  FileUtils.cd "build" do
-    FileUtils.rm_rf Dir.glob("R2P2*.*")
-  end
-  begin
-    sh "cmake --build build --target clean"
-  rescue => e
-    puts "Ignoring an error: #{e.message}"
+  BUILD_DIRS.each do |dir|
+    FileUtils.rm_f Dir.glob("#{dir}/R2P2*.*")
+    begin
+      sh "cmake --build #{dir} --target clean"
+    rescue => e
+      puts "Ignoring an error: #{e.message}"
+    end
   end
 end
