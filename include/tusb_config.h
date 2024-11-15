@@ -32,6 +32,20 @@
  extern "C" {
 #endif
 
+//--------------------------------------------------------------------+
+// Board Specific Configuration
+//--------------------------------------------------------------------+
+
+// RHPort number used for device can be defined by board.mk, default to port 0
+#ifndef BOARD_TUD_RHPORT
+#define BOARD_TUD_RHPORT      0
+#endif
+
+// RHPort max operational speed can defined by board.mk
+#ifndef BOARD_TUD_MAX_SPEED
+#define BOARD_TUD_MAX_SPEED   OPT_MODE_DEFAULT_SPEED
+#endif
+
 //--------------------------------------------------------------------
 // COMMON CONFIGURATION
 //--------------------------------------------------------------------
@@ -40,6 +54,12 @@
 #ifndef CFG_TUSB_MCU
   #error CFG_TUSB_MCU must be defined
 #endif
+
+#ifndef CFG_TUSB_OS
+  #define CFG_TUSB_OS OPT_OS_NONE
+#endif
+
+#define CFG_TUD_ENABLED       1
 
 // RHPort number used for device can be defined by board.mk, default to port 0
 #ifndef BOARD_DEVICE_RHPORT_NUM

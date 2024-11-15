@@ -37,7 +37,12 @@ main(void)
 {
   stdio_init_all();
   board_init();
-  tusb_init();
+
+  // init device stack on configured roothub port
+  tud_init(BOARD_TUD_RHPORT);
+  if (board_init_after_tusb) {
+    board_init_after_tusb();
+  }
 
   mrbc_init(heap_pool, HEAP_SIZE);
   mrbc_tcb *tcb = mrbc_create_task(usb_task, 0);
