@@ -86,6 +86,13 @@ task :pico2 do
   sh "rake all"
 end
 
+desc "build for RP2350 with debug flags"
+task :pico2_debug do
+  ENV['BOARD'] = 'pico2'
+  ENV['PICORUBY_DEBUG'] = '1'
+  sh "rake debug"
+end
+
 task :setup do
   sh "git submodule update --init"
   FileUtils.cd "lib/picoruby" do
