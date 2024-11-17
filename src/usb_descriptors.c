@@ -274,7 +274,11 @@ uint16_t const *tud_descriptor_string_cb(uint8_t index, uint16_t langid) {
       // Note: the 0xEE index string is a Microsoft OS 1.0 Descriptors.
       // https://docs.microsoft.com/en-us/windows-hardware/drivers/usbcon/microsoft-defined-usb-descriptors
 
-      if ( !(index < sizeof(string_desc_arr) / sizeof(string_desc_arr[0])) ) return NULL;
+      if ( !(index < sizeof(string_desc_arr) / sizeof(string_desc_arr[0])) ) {
+        //printf("Invalid string index: %d\n", index);
+        return NULL;
+      }
+
 
       const char *str = string_desc_arr[index];
 
@@ -285,7 +289,7 @@ uint16_t const *tud_descriptor_string_cb(uint8_t index, uint16_t langid) {
 
       // Convert ASCII string into UTF-16
       for ( size_t i = 0; i < chr_count; i++ ) {
-        _desc_str[1 + i] = str[i];
+        _desc_str[1 + i] = (uint16_t)str[i];
       }
       break;
   }

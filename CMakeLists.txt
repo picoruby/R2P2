@@ -44,6 +44,12 @@ elseif(DEFINED ENV{PICO2})
   set(R2P2_NAME R2P2_PICO2)
   set(BUILD_CONFIG r2p2-cortex-m33)
   set(BUILD_DIR build_pico2)
+  add_compile_options(
+    -mcpu=cortex-m33
+    -march=armv8-m.main+fp+dsp
+    -mabi=aapcs-linux
+    -mfloat-abi=softfp
+  )
 else()
   set(R2P2_NAME R2P2)
   set(BUILD_CONFIG r2p2-cortex-m0plus)
@@ -57,7 +63,10 @@ add_compile_options(-Wall
   -Wno-format
   -Wno-unused-function
   -Wno-maybe-uninitialized
+  -ffunction-sections
+  -fdata-sections
   -fshort-enums
+  -mthumb
 )
 
 add_definitions(
@@ -135,7 +144,7 @@ add_custom_target(mrbdir ALL
   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_SOURCE_DIR}/${BUILD_DIR}/mrb
 )
 
-set(RUBY_FILES r2p2_task usb_task)
+set(RUBY_FILES r2p2_task)
 
 add_dependencies(${PROJECT_NAME}
   mrbdir
@@ -169,10 +178,16 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   hardware_spi
   hardware_pwm
   pico_runtime
-  hardware_sleep
-  hardware_rtc
   mruby
 )
+
+# Workaround for Pico2
+if(NOT DEFINED ENV{PICO2})
+  target_link_libraries(${PROJECT_NAME} PRIVATE
+    hardware_sleep
+    hardware_rtc
+  )
+endif()
 
 # btstack is used in BLE build
 if(DEFINED ENV{PICO_BLE})

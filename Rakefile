@@ -68,16 +68,37 @@ task :pico do
   sh "rake all"
 end
 
+desc "build for RP2040 with debug flags"
+task :pico_debug do
+  ENV['BOARD'] = 'pico'
+  ENV['PICORUBY_DEBUG'] = '1'
+  sh "rake debug"
+end
+
 desc "build for RP2040 with CYW43 WiFi"
 task :pico_wifi do
   ENV['BOARD'] = 'pico_wifi'
   sh "rake all"
 end
 
+desc "build for RP2040 with CYW43 WiFi with debug flags"
+task :pico_wifi_debug do
+  ENV['BOARD'] = 'pico_wifi'
+  ENV['PICORUBY_DEBUG'] = '1'
+  sh "rake debug"
+end
+
 desc "build for RP2040 with CYW43 BLE"
 task :pico_ble do
   ENV['BOARD'] = 'pico_ble'
   sh "rake all"
+end
+
+desc "build for RP2040 with CYW43 BLE with debug flags"
+task :pico_ble_debug do
+  ENV['BOARD'] = 'pico_ble'
+  ENV['PICORUBY_DEBUG'] = '1'
+  sh "rake debug"
 end
 
 desc "build for RP2350"
@@ -93,6 +114,36 @@ task :pico2_debug do
   sh "rake debug"
 end
 
+desc "clean built for RP2xxx"
+task clean_all: [:clean_pico, :clean_pico_wifi, :clean_pico_ble, :clean_pico2]
+
+desc "clean built for RP2040"
+task :clean_pico do
+  ENV['BOARD'] = 'pico'
+  sh "rake clean"
+  sh "cmake --build build_pico --target clean"
+end
+
+desc "clean built for RP2040 with CYW43 WiFi"
+task :clean_pico_wifi do
+  ENV['BOARD'] = 'pico_wifi'
+  sh "rake clean"
+  sh "cmake --build build_pico_wifi --target clean"
+end
+
+desc "clean built for RP2040 with CYW43 BLE"
+task :clean_pico_ble do
+  ENV['BOARD'] = 'pico_ble'
+  sh "rake clean"
+  sh "cmake --build build_pico_ble --target clean"
+end
+desc "clean built for RP2350"
+task :clean_pico2 do
+  ENV['BOARD'] = 'pico2'
+  sh "rake clean"
+  sh "cmake --build build_pico2 --target clean"
+end
+
 task :setup do
   sh "git submodule update --init"
   FileUtils.cd "lib/picoruby" do
@@ -104,7 +155,7 @@ desc "build production"
 task :all => [:libmruby, :cmake_production, :build]
 
 desc "clean then build debug"
-task :debug => [:clean, :libmruby, :cmake_debug, :build]
+task :debug => [:libmruby, :cmake_debug, :build]
 
 file "lib/picoruby" do
   sh "git submodule update --init --recursive"
@@ -181,13 +232,5 @@ desc "clean built"
 task :clean do
   FileUtils.cd "lib/picoruby" do
     sh "MRUBY_CONFIG=#{mruby_config} rake clean"
-  end
-  BUILD_DIRS.each do |dir|
-    FileUtils.rm_f Dir.glob("#{dir}/R2P2*.*")
-    begin
-      sh "cmake --build #{dir} --target clean"
-    rescue => e
-      puts "Ignoring an error: #{e.message}"
-    end
   end
 end
