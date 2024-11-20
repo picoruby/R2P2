@@ -46,9 +46,12 @@ elseif(DEFINED ENV{PICO2})
   set(BUILD_DIR build_pico2)
   add_compile_options(
     -mcpu=cortex-m33
-    -march=armv8-m.main+fp+dsp
-    -mabi=aapcs-linux
-    -mfloat-abi=softfp
+    #-march=armv8-m.main+fp+dsp
+    #-mabi=aapcs-linux
+    #-mfloat-abi=softfp
+    -fno-strict-aliasing
+    -fno-unroll-loops
+    -mslow-flash-data
   )
 else()
   set(R2P2_NAME R2P2)
@@ -144,7 +147,7 @@ add_custom_target(mrbdir ALL
   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_SOURCE_DIR}/${BUILD_DIR}/mrb
 )
 
-set(RUBY_FILES r2p2_task)
+set(RUBY_FILES main_task usb_task)
 
 add_dependencies(${PROJECT_NAME}
   mrbdir
@@ -168,6 +171,7 @@ target_link_directories(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
   pico_stdlib
+  # pico_stdio_usb
   pico_bootsel_via_double_reset
   tinyusb_device
   tinyusb_board

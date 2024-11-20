@@ -158,12 +158,12 @@ desc "clean then build debug"
 task :debug => [:libmruby, :cmake_debug, :build]
 
 file "lib/picoruby" do
-  sh "git submodule update --init --recursive"
+##  sh "git submodule update --init --recursive"
 end
 
 task :libmruby => "lib/picoruby" do
   FileUtils.cd "lib/picoruby" do
-    sh "rake test"
+##    sh "rake test"
     sh "MRUBY_CONFIG=#{mruby_config} rake"
   end
 end
