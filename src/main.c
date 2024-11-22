@@ -10,7 +10,6 @@
 #include <executables_init.c>
 
 #include "main_task.c"
-#include "usb_task.c"
 
 #if !defined(HEAP_SIZE)
   #if defined(PICO_RP2040)
@@ -43,8 +42,6 @@ main(void)
   mrbc_init(heap_pool, HEAP_SIZE);
   mrbc_tcb *main_tcb = mrbc_create_task(main_task, 0);
   mrbc_set_task_name(main_tcb, "main_task");
-//  mrbc_tcb *usb_tcb = mrbc_create_task(usb_task, 0);
-//  mrbc_set_task_name(usb_tcb, "usb_task");
   mrbc_vm *vm = &main_tcb->vm;
   mrbc_class *mrbc_class_USB = mrbc_define_class(vm, "USB", mrbc_class_object);
   mrbc_define_method(vm, mrbc_class_USB, "tud_task", c_tud_task);

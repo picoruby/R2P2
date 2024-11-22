@@ -147,7 +147,7 @@ add_custom_target(mrbdir ALL
   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_SOURCE_DIR}/${BUILD_DIR}/mrb
 )
 
-set(RUBY_FILES main_task usb_task)
+set(RUBY_FILES main_task)
 
 add_dependencies(${PROJECT_NAME}
   mrbdir
@@ -225,7 +225,7 @@ endif()
 target_include_directories(${PROJECT_NAME} PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}
   ${PICO_SDK_PATH}/src/rp2_common/pico_stdio_usb/include
-  ${CMAKE_SOURCE_DIR}/lib/picoruby/include/hal_no_impl
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-machine/include
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mrubyc/lib/mrubyc/src
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-filesystem-fat/lib/ff14b/source
   ${CMAKE_SOURCE_DIR}/lib/picoruby/build/${BUILD_CONFIG}/mrbgems
