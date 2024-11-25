@@ -27,12 +27,6 @@
 
 static uint8_t heap_pool[HEAP_SIZE];
 
-static void
-c_tud_task(mrbc_vm *vm, mrbc_value v[], int argc)
-{
-  tud_task();
-}
-
 int
 main(void)
 {
@@ -43,8 +37,6 @@ main(void)
   mrbc_tcb *main_tcb = mrbc_create_task(main_task, 0);
   mrbc_set_task_name(main_tcb, "main_task");
   mrbc_vm *vm = &main_tcb->vm;
-  mrbc_class *mrbc_class_USB = mrbc_define_class(vm, "USB", mrbc_class_object);
-  mrbc_define_method(vm, mrbc_class_USB, "tud_task", c_tud_task);
   picoruby_init_require(vm);
   picoruby_init_executables(vm);
   mrbc_run();
