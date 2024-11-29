@@ -1,6 +1,6 @@
 require "fileutils"
 
-PICO_SDK_TAG = "2.0.0"
+PICO_SDK_TAG = "2.1.0"
 PICO_EXTRAS_TAG = "sdk-#{PICO_SDK_TAG}"
 
 def mruby_config
@@ -163,7 +163,7 @@ end
 
 task :libmruby => "lib/picoruby" do
   FileUtils.cd "lib/picoruby" do
-##    sh "rake test"
+    sh "rake test"
     sh "MRUBY_CONFIG=#{mruby_config} rake"
   end
 end
