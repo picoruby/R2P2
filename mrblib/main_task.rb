@@ -37,6 +37,5 @@ begin
 
 rescue => e
   puts "#{e.message} (#{e.class})"
-  Watchdog.reboot 1000
 end
 
