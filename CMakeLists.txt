@@ -135,6 +135,7 @@ if(DEFINED ENV{PICO_WIFI})
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/ports/rp2040/dns.c
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/ports/rp2040/tcp.c
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/ports/rp2040/udp.c
+    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mqtt/ports/rp2040/mqtt.c
   )
 endif()
 add_executable(${PROJECT_NAME}
@@ -230,6 +231,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-filesystem-fat/lib/ff14b/source
   ${CMAKE_SOURCE_DIR}/lib/picoruby/build/${BUILD_CONFIG}/mrbgems
   ${CMAKE_SOURCE_DIR}/lib/picoruby/build/repos/${BUILD_CONFIG}/mruby-compiler2/include
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/build/repos/${BUILD_CONFIG}/mruby-compiler2/lib/prism/include
 )
 
 pico_add_extra_outputs(${PROJECT_NAME})
