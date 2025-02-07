@@ -230,6 +230,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-filesystem-fat/lib/ff14b/source
   ${CMAKE_SOURCE_DIR}/lib/picoruby/build/${BUILD_CONFIG}/mrbgems
   ${CMAKE_SOURCE_DIR}/lib/picoruby/build/repos/${BUILD_CONFIG}/mruby-compiler2/include
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mbedtls/include
 )
 
 pico_add_extra_outputs(${PROJECT_NAME})
