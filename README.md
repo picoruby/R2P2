@@ -1,6 +1,6 @@
 # R2P2
 
-R2P2 (Ruby on Raspberry Pi Pico) is a shell system written in [picoruby/picoruby](https://github.com/picoruby/picoruby).
+R2P2 (Ruby Rapid Portable Platform) is a shell system runs on Raspberry Pi Pico written in [picoruby/picoruby](https://github.com/picoruby/picoruby).
 
 ## Usage
 
