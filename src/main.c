@@ -6,9 +6,7 @@
 #include <hardware/clocks.h>
 
 /* PicoRuby */
-#include <picogem_init.c>
-#include <executables_init.c>
-
+#include "picoruby.h"
 #include "main_task.c"
 
 #if !defined(HEAP_SIZE)

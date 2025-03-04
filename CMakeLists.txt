@@ -82,6 +82,7 @@ add_definitions(
   -DMRBC_USE_MATH
   -DMRBC_TICK_UNIT=1
   -DMRBC_TIMESLICE_TICK_COUNT=10
+  -DPICORB_VM_MRUBYC
 )
 
 if(DEFINED ENV{PICORUBY_DEBUG})
@@ -163,6 +164,8 @@ endforeach(rb)
 target_include_directories(${PROJECT_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/${BUILD_DIR}/mrb
   ${CMAKE_CURRENT_LIST_DIR}/include
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/include
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/build/repos/${BUILD_CONFIG}/mruby-compiler2/lib/prism/include
 )
 
 target_link_directories(${PROJECT_NAME} PRIVATE
