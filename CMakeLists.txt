@@ -48,7 +48,7 @@ elseif(DEFINED ENV{PICO2})
   )
 else()
   set(R2P2_NAME R2P2)
-  set(BUILD_CONFIG r2p2-cortex-m0plus)
+  set(BUILD_CONFIG r2p2-mrb-cortex-m0plus)
   set(BUILD_DIR build_pico)
 endif()
 
@@ -68,14 +68,15 @@ add_compile_options(-Wall
 add_definitions(
   # These defines should not contradict defines in
   # picoruby/build_config/${BUILD_CONFIG}.rb
-  -DMRC_CUSTOM_ALLOC
-  -DMRBC_REQUIRE_32BIT_ALIGNMENT
-  -DMRBC_CONVERT_CRLF
-  -DMRBC_USE_FLOAT=2
-  -DMRBC_USE_MATH
-  -DMRBC_TICK_UNIT=1
-  -DMRBC_TIMESLICE_TICK_COUNT=10
-  -DPICORB_VM_MRUBYC
+  #-DMRC_CUSTOM_ALLOC
+  #-DMRBC_REQUIRE_32BIT_ALIGNMENT
+  #-DMRBC_CONVERT_CRLF
+  #-DMRBC_USE_FLOAT=2
+  #-DMRBC_USE_MATH
+  #-DMRBC_TICK_UNIT=1
+  #-DMRBC_TIMESLICE_TICK_COUNT=10
+  #-DPICORB_VM_MRUBYC
+  -DPICORB_VM_MRUBY
 )
 
 if(DEFINED ENV{PICORUBY_DEBUG})
@@ -100,12 +101,12 @@ set(SOURCE_FILES
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-filesystem-fat/ports/rp2040/flash_disk.c
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-filesystem-fat/ports/rp2040/sd_disk.c
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-filesystem-fat/ports/rp2040/msc_disk.c
-  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-gpio/ports/rp2040/gpio.c
-  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-i2c/ports/rp2040/i2c.c
-  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-spi/ports/rp2040/spi.c
-  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-adc/ports/rp2040/adc.c
-  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-uart/ports/rp2040/uart.c
-  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-pwm/ports/rp2040/pwm.c
+  #  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-gpio/ports/rp2040/gpio.c
+  #  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-i2c/ports/rp2040/i2c.c
+  #  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-spi/ports/rp2040/spi.c
+  #  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-adc/ports/rp2040/adc.c
+  #  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-uart/ports/rp2040/uart.c
+  #  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-pwm/ports/rp2040/pwm.c
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-machine/ports/rp2040/machine.c
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-io-console/ports/rp2040/io-console.c
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-watchdog/ports/rp2040/watchdog.c
@@ -153,6 +154,9 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/include
   ${CMAKE_SOURCE_DIR}/lib/picoruby/include
   ${CMAKE_SOURCE_DIR}/lib/picoruby/build/repos/${BUILD_CONFIG}/mruby-compiler2/lib/prism/include
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/build/repos/${BUILD_CONFIG}/mruby-compiler2/include
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/build/${BUILD_CONFIG}/include
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mruby/include
 )
 
 target_link_directories(${PROJECT_NAME} PRIVATE
@@ -208,7 +212,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}
   ${PICO_SDK_PATH}/src/rp2_common/pico_stdio_usb/include
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-machine/include
-  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mrubyc/lib/mrubyc/src
+  #${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mrubyc/lib/mrubyc/src
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mruby/lib/mruby/include
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-filesystem-fat/lib/ff14b/source
   ${CMAKE_SOURCE_DIR}/lib/picoruby/build/${BUILD_CONFIG}/mrbgems
   ${CMAKE_SOURCE_DIR}/lib/picoruby/build/repos/${BUILD_CONFIG}/mruby-compiler2/include

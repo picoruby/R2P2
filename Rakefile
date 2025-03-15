@@ -14,7 +14,8 @@ def mruby_config
   when 'pico_w'
     'r2p2_w-cortex-m0plus'
   else
-    'r2p2-cortex-m0plus'
+    #'r2p2-cortex-m0plus'
+    'r2p2-mrb-cortex-m0plus'
   end
 end
 
@@ -141,7 +142,7 @@ end
 
 task :libmruby => "lib/picoruby" do
   FileUtils.cd "lib/picoruby" do
-#    sh "rake test"
+    sh "rake test"
     sh "MRUBY_CONFIG=#{mruby_config} rake"
   end
 end
