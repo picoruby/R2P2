@@ -10,7 +10,7 @@ end
 def mruby_config
   case ENV['BOARD']&.downcase
   when 'pico2'
-    'r2p2-cortex-m33'
+    'r2p2-mrb-cortex-m33'
   when 'pico_w'
     'r2p2_w-cortex-m0plus'
   else
