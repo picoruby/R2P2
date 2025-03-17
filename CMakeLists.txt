@@ -35,7 +35,7 @@ if(DEFINED ENV{PICO_W})
 elseif(DEFINED ENV{PICO2})
   set(PICO_BOARD pico2)
   set(R2P2_NAME R2P2_PICO2)
-  set(BUILD_CONFIG r2p2-cortex-m33)
+  set(BUILD_CONFIG r2p2-mrb-cortex-m33)
   set(BUILD_DIR build_pico2)
   add_compile_options(
     -mcpu=cortex-m33

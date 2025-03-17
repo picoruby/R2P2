@@ -9,6 +9,8 @@
 #include "picoruby.h"
 #include "main_task.c"
 
+mrb_state *global_mrb = NULL;
+
 int
 main(void)
 {
@@ -17,7 +19,7 @@ main(void)
 
   int ret = 0;
   mrb_state *mrb = mrb_open();
-//  global_mrb = mrb;
+  global_mrb = mrb;
   mrc_irep *irep = mrb_read_irep(mrb, main_task);
   mrc_ccontext *cc = mrc_ccontext_new(mrb);
   mrb_tcb *tcb = mrc_create_task(cc, irep, NULL, "R2P2");

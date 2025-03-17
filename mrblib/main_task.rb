@@ -2,13 +2,14 @@ require "machine"
 require "watchdog"
 Watchdog.disable
 require "shell"
-STDOUT = IO
-STDIN = IO
+STDOUT = IO.new
+STDIN = IO.new
 
 # Setup flash disk
 begin
   sleep 1
   STDIN.echo = false
+  sleep 5
   puts "Initializing FLASH disk as the root volume... "
   Shell.setup_root_volume(:flash, label: "R2P2")
   Shell.setup_system_files
