@@ -27,18 +27,11 @@ else()
   message(FATAL_ERROR "PICORUBY_MSC_xxxx is not defined.")
 endif()
 
-if((DEFINED ENV{PICO_WIFI}) AND DEFINED ENV{PICO_BLE})
-  message(FATAL_ERROR "Both BLE and WiFi cannot be enabled for Pico W")
-elseif(DEFINED ENV{PICO_WIFI})
+if(DEFINED ENV{PICO_W})
   set(PICO_BOARD pico_w)
-  set(R2P2_NAME R2P2_WIFI)
-  set(BUILD_CONFIG r2p2_wifi-cortex-m0plus)
-  set(BUILD_DIR build_pico_wifi)
-elseif(DEFINED ENV{PICO_BLE})
-  set(PICO_BOARD pico_w)
-  set(R2P2_NAME R2P2_BLE)
-  set(BUILD_CONFIG r2p2_ble-cortex-m0plus)
-  set(BUILD_DIR build_pico_ble)
+  set(R2P2_NAME R2P2_W)
+  set(BUILD_CONFIG r2p2_w-cortex-m0plus)
+  set(BUILD_DIR build_pico_w)
 elseif(DEFINED ENV{PICO2})
   set(PICO_BOARD pico2)
   set(R2P2_NAME R2P2_PICO2)
@@ -95,7 +88,7 @@ else()
   )
 endif()
 
-if(DEFINED ENV{PICO_WIFI})
+if(DEFINED ENV{PICO_W})
   add_definitions(
     -DUSE_WIFI
   )
@@ -119,23 +112,17 @@ set(SOURCE_FILES
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-rng/ports/rp2040/rng.c
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-env/ports/rp2040/env.c
 )
-# only used in BLE build
-if(DEFINED ENV{PICO_BLE})
-  list(APPEND SOURCE_FILES
-    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-cyw43/ports/rp2040/cyw43.c
-    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/ports/rp2040/ble.c
-    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/ports/rp2040/ble_peripheral.c
-    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/ports/rp2040/ble_central.c
-  )
-endif()
-# only used in WiFi build
-if(DEFINED ENV{PICO_WIFI})
+# only used in W build
+if(DEFINED ENV{PICO_W})
   list(APPEND SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-cyw43/ports/rp2040/cyw43.c
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/ports/rp2040/common.c
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/ports/rp2040/dns.c
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/ports/rp2040/tcp.c
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/ports/rp2040/udp.c
+    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/ports/rp2040/ble.c
+    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/ports/rp2040/ble_peripheral.c
+    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/ports/rp2040/ble_central.c
   )
 endif()
 add_executable(${PROJECT_NAME}
@@ -196,26 +183,18 @@ if(NOT DEFINED ENV{PICO2})
   )
 endif()
 
-# btstack is used in BLE build
-if(DEFINED ENV{PICO_BLE})
-  target_link_libraries(${PROJECT_NAME} PRIVATE
-    pico_btstack_ble
-    pico_btstack_cyw43
-  )
-  target_include_directories(${PROJECT_NAME} PRIVATE
-    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/include
-  )
-endif()
-
-if(DEFINED ENV{PICO_WIFI})
+if(DEFINED ENV{PICO_W})
   # these are used only in WiFi build
   target_link_libraries(${PROJECT_NAME} PRIVATE
     pico_cyw43_arch_lwip_threadsafe_background
     pico_lwip_mbedtls
     pico_mbedtls
+    pico_btstack_ble
+    pico_btstack_cyw43
   )
   target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/include-net
+    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/include
   )
 #else()
 #  # Even the BLE build needs a pico_cyw43_arch, only in a different flavor
