@@ -9,6 +9,12 @@
 #include "picoruby.h"
 #include "main_task.c"
 
+#ifndef HEAP_SIZE
+#define HEAP_SIZE (1024 * 340)
+#endif
+
+static uint8_t heap_pool[HEAP_SIZE];
+
 mrb_state *global_mrb = NULL;
 
 int
@@ -18,7 +24,7 @@ main(void)
   board_init();
 
   int ret = 0;
-  mrb_state *mrb = mrb_open();
+  mrb_state *mrb = mrb_open_with_tlsf(heap_pool, HEAP_SIZE);
   global_mrb = mrb;
   mrc_irep *irep = mrb_read_irep(mrb, main_task);
   mrc_ccontext *cc = mrc_ccontext_new(mrb);
