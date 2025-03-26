@@ -6,15 +6,13 @@
 #include <hardware/clocks.h>
 
 /* PicoRuby */
-#include <picogem_init.c>
-#include <executables_init.c>
-
+#include "picoruby.h"
 #include "main_task.c"
 
 #if !defined(HEAP_SIZE)
   #if defined(PICO_RP2040)
     #if defined(USE_WIFI)
-      #define HEAP_SIZE (1024 * 110)
+      #define HEAP_SIZE (1024 * 150)
     #else
       #define HEAP_SIZE (1024 * 194)
     #endif
