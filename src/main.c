@@ -9,11 +9,25 @@
 #include "picoruby.h"
 #include "main_task.c"
 
-#ifndef HEAP_SIZE
-#define HEAP_SIZE (1024 * 340)
+#if !defined(HEAP_SIZE)
+  #if defined(PICO_RP2040)
+    #if defined(USE_WIFI)
+      #define HEAP_SIZE (1024 * 150)
+    #else
+      #define HEAP_SIZE (1024 * 194)
+    #endif
+  #elif defined(PICO_RP2350)
+    #define HEAP_SIZE (1024 * (194 + 260))
+  #else
+    #error "Unknown board"
+  #endif
 #endif
 
+#if defined(PICORB_ALLOC_DEFAULT)
+#define heap_pool NULL;
+#else
 static uint8_t heap_pool[HEAP_SIZE];
+#endif
 
 mrb_state *global_mrb = NULL;
 
@@ -24,7 +38,7 @@ main(void)
   board_init();
 
   int ret = 0;
-  mrb_state *mrb = mrb_open_with_tlsf(heap_pool, HEAP_SIZE);
+  mrb_state *mrb = mrb_open_with_custom_alloc(heap_pool, HEAP_SIZE);
   global_mrb = mrb;
   mrc_irep *irep = mrb_read_irep(mrb, main_task);
   mrc_ccontext *cc = mrc_ccontext_new(mrb);
