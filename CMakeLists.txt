@@ -35,7 +35,7 @@ if(DEFINED ENV{PICO_W})
 elseif(DEFINED ENV{PICO2})
   set(PICO_BOARD pico2)
   set(R2P2_NAME R2P2_PICO2)
-  set(BUILD_CONFIG r2p2-mrb-cortex-m33)
+  set(BUILD_CONFIG r2p2-microruby-cortex-m33)
   set(BUILD_DIR build_pico2)
   add_compile_options(
     -mcpu=cortex-m33
@@ -46,9 +46,20 @@ elseif(DEFINED ENV{PICO2})
     -fno-unroll-loops
     -mslow-flash-data
   )
+elseif(DEFINED ENV{PICO2_W})
+  set(PICO_BOARD pico2_w)
+  set(R2P2_NAME R2P2_PICO2_W)
+  set(BUILD_CONFIG r2p2_w-microruby-cortex-m33)
+  set(BUILD_DIR build_pico2_w)
+  add_compile_options(
+    -mcpu=cortex-m33
+    -fno-strict-aliasing
+    -fno-unroll-loops
+    -mslow-flash-data
+  )
 else()
   set(R2P2_NAME R2P2)
-  set(BUILD_CONFIG r2p2-mrb-cortex-m0plus)
+  set(BUILD_CONFIG r2p2-microruby-cortex-m0plus)
   set(BUILD_DIR build_pico)
 endif()
 
@@ -89,7 +100,7 @@ else()
   )
 endif()
 
-if(DEFINED ENV{PICO_W})
+if(DEFINED ENV{PICO_W} OR DEFINED ENV{PICO2_W})
   add_definitions(
     -DUSE_WIFI
   )
@@ -114,13 +125,10 @@ set(SOURCE_FILES
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-env/ports/rp2040/env.c
 )
 # only used in W build
-if(DEFINED ENV{PICO_W})
+if(DEFINED ENV{PICO_W} OR DEFINED ENV{PICO2_W})
   list(APPEND SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-cyw43/ports/rp2040/cyw43.c
-    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/ports/rp2040/common.c
-    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/ports/rp2040/dns.c
-    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/ports/rp2040/tcp.c
-    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/ports/rp2040/udp.c
+    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/ports/rp2040/net.c
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/ports/rp2040/ble.c
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/ports/rp2040/ble_peripheral.c
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/ports/rp2040/ble_central.c
@@ -157,6 +165,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/lib/picoruby/build/repos/${BUILD_CONFIG}/mruby-compiler2/include
   ${CMAKE_SOURCE_DIR}/lib/picoruby/build/${BUILD_CONFIG}/include
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mruby/include
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/include
 )
 
 target_link_directories(${PROJECT_NAME} PRIVATE
@@ -180,14 +189,14 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 )
 
 # Workaround for Pico2
-if(NOT DEFINED ENV{PICO2})
+if(NOT DEFINED ENV{PICO2} AND NOT DEFINED ENV{PICO2_W})
   target_link_libraries(${PROJECT_NAME} PRIVATE
     hardware_sleep
     hardware_rtc
   )
 endif()
 
-if(DEFINED ENV{PICO_W})
+if(DEFINED ENV{PICO_W} OR DEFINED ENV{PICO2_W})
   # these are used only in WiFi build
   target_link_libraries(${PROJECT_NAME} PRIVATE
     pico_cyw43_arch_lwip_threadsafe_background

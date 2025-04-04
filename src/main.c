@@ -17,7 +17,7 @@
       #define HEAP_SIZE (1024 * 194)
     #endif
   #elif defined(PICO_RP2350)
-    #define HEAP_SIZE (1024 * (194 + 260))
+    #define HEAP_SIZE (1024 * (194 + 235))
   #else
     #error "Unknown board"
   #endif

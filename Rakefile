@@ -10,12 +10,14 @@ end
 def mruby_config
   case ENV['BOARD']&.downcase
   when 'pico2'
-    'r2p2-mrb-cortex-m33'
+    'r2p2-microruby-cortex-m33'
   when 'pico_w'
-    'r2p2_w-cortex-m0plus'
+    'r2p2_w-microruby-cortex-m0plus'
+  when 'pico2_w'
+    'r2p2_w-microruby-cortex-m33'
   else
     #'r2p2-cortex-m0plus'
-    'r2p2-mrb-cortex-m0plus'
+    'r2p2-microruby-cortex-m0plus'
   end
 end
 
@@ -27,12 +29,16 @@ def cmake_flags
     flags << "PICO_W=yes"
   when 'pico2'
     flags << "PICO2=yes"
+  when 'pico2_w'
+    flags << "PICO2_W=yes"
   end
   flags.join(" ")
 end
 
 def def_board
   case ENV['BOARD']&.downcase
+  when 'pico2_w'
+    '-DPICO_PLATFORM=rp2350 -DPICO_BOARD=pico2_w'
   when 'pico2'
     '-DPICO_PLATFORM=rp2350 -DPICO_BOARD=pico2'
   when 'pico_w'
@@ -44,6 +50,8 @@ end
 
 def build_dir
   case ENV['BOARD']&.downcase
+  when 'pico2_w'
+    'build_pico2_w'
   when 'pico2'
     'build_pico2'
   when 'pico_w'
@@ -58,6 +66,7 @@ task :default do
   puts "  rake pico       # build for RP2040"
   puts "  rake pico_w     # build for RP2040 with CYW43"
   puts "  rake pico2      # build for RP2350"
+  puts "  rake pico2_w    # build for RP2350 with CYW43"
 end
 
 desc "build for RP2040"
@@ -76,6 +85,12 @@ end
 desc "build for RP2040 with CYW43"
 task :pico_w do
   ENV['BOARD'] = 'pico_w'
+  sh "rake all"
+end
+
+desc "build for RP2350 with CYW43"
+task :pico2_w do
+  ENV['BOARD'] = 'pico2_w'
   sh "rake all"
 end
 
@@ -99,8 +114,15 @@ task :pico2_debug do
   sh "rake debug"
 end
 
+desc "build for RP2350 with CYW43 with debug flags"
+task :pico2_w_debug do
+  ENV['BOARD'] = 'pico2_w'
+  ENV['PICORUBY_DEBUG'] = '1'
+  sh "rake debug"
+end
+
 desc "clean built for RP2xxx"
-task clean_all: [:clean_pico, :clean_pico_w, :clean_pico2]
+task clean_all: [:clean_pico, :clean_pico_w, :clean_pico2, :clean_pico2_w]
 
 desc "clean built for RP2040"
 task :clean_pico do
@@ -121,6 +143,19 @@ task :clean_pico2 do
   ENV['BOARD'] = 'pico2'
   sh "rake clean"
   sh "cmake --build build_pico2 --target clean"
+end
+
+desc "clean built for RP2350 with CYW43"
+task :clean_pico2_w do
+  ENV['BOARD'] = 'pico2_w'
+  sh "rake clean"
+  sh "cmake --build build_pico2_w --target clean"
+end
+desc "clean built for RP2350 with CYW43"
+task :clean_pico2_w do
+  ENV['BOARD'] = 'pico2_w'
+  sh "rake clean"
+  sh "cmake --build build_pico2_w --target clean"
 end
 
 task :setup do
