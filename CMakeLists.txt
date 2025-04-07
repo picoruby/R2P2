@@ -35,6 +35,7 @@ if(DEFINED ENV{PICO_W})
 elseif(DEFINED ENV{PICO2})
   set(PICO_BOARD pico2)
   set(R2P2_NAME R2P2_PICO2)
+  set(FLASH_TARGET_OFFSET 0x00340000)
   set(BUILD_CONFIG r2p2-microruby-cortex-m33)
   set(BUILD_DIR build_pico2)
   add_compile_options(
@@ -137,6 +138,10 @@ endif()
 add_executable(${PROJECT_NAME}
   ${SOURCE_FILES}
 )
+
+if(DEFINED ENV{PICO2} OR DEFINED ENV{PICO2_W})
+  target_compile_definitions(${PROJECT_NAME} PRIVATE FLASH_TARGET_OFFSET=0x00340000)
+endif()
 
 set(PICORBC ${CMAKE_SOURCE_DIR}/lib/picoruby/bin/picorbc)
 
