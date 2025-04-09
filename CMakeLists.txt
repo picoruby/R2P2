@@ -95,6 +95,10 @@ if(DEFINED ENV{PICORUBY_DEBUG})
   add_definitions(
     -DPICORUBY_DEBUG
   )
+  add_compile_options(
+    -O0
+    -g3
+  )
 else()
   add_definitions(
     -DNDEBUG
@@ -139,6 +143,7 @@ add_executable(${PROJECT_NAME}
   ${SOURCE_FILES}
 )
 
+target_compile_definitions(${PROJECT_NAME} PRIVATE MRB_INT64=1)
 if(DEFINED ENV{PICO2} OR DEFINED ENV{PICO2_W})
   target_compile_definitions(${PROJECT_NAME} PRIVATE FLASH_TARGET_OFFSET=0x00340000)
 endif()
