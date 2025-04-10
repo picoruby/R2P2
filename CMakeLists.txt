@@ -35,7 +35,6 @@ if(DEFINED ENV{PICO_W})
 elseif(DEFINED ENV{PICO2})
   set(PICO_BOARD pico2)
   set(R2P2_NAME R2P2_PICO2)
-  set(FLASH_TARGET_OFFSET 0x00340000)
   set(BUILD_CONFIG r2p2-microruby-cortex-m33)
   set(BUILD_DIR build_pico2)
   add_compile_options(
