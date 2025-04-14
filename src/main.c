@@ -17,14 +17,21 @@
       #define HEAP_SIZE (1024 * 194)
     #endif
   #elif defined(PICO_RP2350)
-    //#define HEAP_SIZE (1024 * (194 + 235))
-    #define HEAP_SIZE (1024 * (194 + 200))
+    #if defined(USE_WIFI)
+      #define HEAP_SIZE (1024 * (150 + 200))
+    #else
+      #define HEAP_SIZE (1024 * (194 + 200))
+    #endif
   #else
     #error "Unknown board"
   #endif
 #endif
 
-//static uint8_t heap_pool[HEAP_SIZE] __attribute__((aligned(8)));
+#if defined(R2P2_ALLOC_LIBC)
+#define heap_pool NULL
+#else
+static uint8_t heap_pool[HEAP_SIZE] __attribute__((aligned(8)));
+#endif
 
 mrb_state *global_mrb = NULL;
 
@@ -35,8 +42,7 @@ main(void)
   board_init();
 
   int ret = 0;
-  mrb_state *mrb = mrb_open();
-//  mrb_state *mrb = mrb_open_with_custom_alloc(heap_pool, HEAP_SIZE);
+  mrb_state *mrb = mrb_open_with_custom_alloc(heap_pool, HEAP_SIZE);
   global_mrb = mrb;
   mrc_irep *irep = mrb_read_irep(mrb, main_task);
   mrc_ccontext *cc = mrc_ccontext_new(mrb);
