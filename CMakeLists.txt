@@ -206,6 +206,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mbedtls/include
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mbedtls/mbedtls/include
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mbedtls/mbedtls/library
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/include
 )
 
 pico_add_extra_outputs(${PROJECT_NAME})
