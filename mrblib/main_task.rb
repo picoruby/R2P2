@@ -7,6 +7,7 @@ STDIN = IO
 
 # Setup flash disk
 begin
+  sleep 1
   STDIN.echo = false
   puts "Initializing FLASH disk as the root volume... "
   Shell.setup_root_volume(:flash, label: "R2P2")

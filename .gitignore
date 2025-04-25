@@ -1,6 +1,7 @@
 build_pico/
 build_pico_w/
 build_pico2/
+build_pico2_w/
 .rake_tasks~
 tags
 releases/
