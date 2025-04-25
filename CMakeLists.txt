@@ -111,6 +111,8 @@ set(SOURCE_FILES
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-watchdog/ports/rp2040/watchdog.c
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-rng/ports/rp2040/rng.c
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-env/ports/rp2040/env.c
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mbedtls/ports/rp2040/timing_alt.c
+  ${PICO_SDK_PATH}/src/rp2_common/pico_mbedtls/pico_mbedtls.c
 )
 # only used in W build
 if(DEFINED ENV{PICO_W})
@@ -184,20 +186,12 @@ if(DEFINED ENV{PICO_W})
   # these are used only in WiFi build
   target_link_libraries(${PROJECT_NAME} PRIVATE
     pico_cyw43_arch_lwip_threadsafe_background
-    pico_lwip_mbedtls
-    pico_mbedtls
     pico_btstack_ble
     pico_btstack_cyw43
   )
   target_include_directories(${PROJECT_NAME} PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}/include-net
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/include
   )
-#else()
-#  # Even the BLE build needs a pico_cyw43_arch, only in a different flavor
-#  target_link_libraries(${PROJECT_NAME} PRIVATE
-#    pico_cyw43_arch_none
-#  )
 endif()
 
 
@@ -210,6 +204,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/lib/picoruby/build/${BUILD_CONFIG}/mrbgems
   ${CMAKE_SOURCE_DIR}/lib/picoruby/build/repos/${BUILD_CONFIG}/mruby-compiler2/include
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mbedtls/include
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mbedtls/mbedtls/include
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mbedtls/mbedtls/library
 )
 
 pico_add_extra_outputs(${PROJECT_NAME})
