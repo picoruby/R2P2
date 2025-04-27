@@ -42,13 +42,15 @@ main(void)
   board_init();
 
   int ret = 0;
+
+#if defined(PICORB_VM_MRUBY)
   mrb_state *mrb = mrb_open_with_custom_alloc(heap_pool, HEAP_SIZE);
   global_mrb = mrb;
   mrc_irep *irep = mrb_read_irep(mrb, main_task);
   mrc_ccontext *cc = mrc_ccontext_new(mrb);
-  mrb_tcb *tcb = mrc_create_task(cc, irep, NULL, "R2P2");
-  tcb->c.ci->stack[0] = mrb_obj_value(mrb->top_self);
-  if (!tcb) {
+  mrb_tcb *main_tcb = mrc_create_task(cc, irep, NULL, "R2P2");
+  main_tcb->c.ci->stack[0] = mrb_obj_value(mrb->top_self);
+  if (!main_tcb) {
     fprintf(stderr, "mrbc_create_task failed\n");
     ret = 1;
   }
@@ -57,6 +59,21 @@ main(void)
   }
   mrb_close(mrb);
   mrc_ccontext_free(cc);
+#elif defined(PICORB_VM_MRUBYC)
+  mrbc_init(heap_pool, HEAP_SIZE);
+  mrbc_tcb *main_tcb = mrbc_create_task(main_task, 0);
+  if (!main_tcb) {
+    fprintf(stderr, "mrbc_create_task failed\n");
+    ret = 1;
+  }
+  else {
+    mrbc_set_task_name(main_tcb, "main_task");
+    mrbc_vm *vm = &main_tcb->vm;
+    picoruby_init_require(vm);
+    picoruby_init_executables(vm);
+    mrbc_run();
+  }
+#endif
   return ret;
 }
 

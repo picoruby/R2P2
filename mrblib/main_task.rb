@@ -5,11 +5,9 @@ require "shell"
 STDOUT = IO.new
 STDIN = IO.new
 
-# Setup flash disk
 begin
   sleep 1
   STDIN.echo = false
-  sleep 2
   puts "Initializing FLASH disk as the root volume... "
   Shell.setup_root_volume(:flash, label: "R2P2")
   Shell.setup_system_files
@@ -21,7 +19,6 @@ begin
 
   $shell.show_logo
   $shell.start
-
 rescue => e
   puts "#{e.message} (#{e.class})"
 end
