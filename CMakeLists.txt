@@ -28,13 +28,13 @@ add_compile_options(-Wall
 )
 
 if(PICORUBY_DEBUG)
-  add_compile_definitions(-DPICORUBY_DEBUG=1)
+  add_compile_definitions(PICORUBY_DEBUG=1)
   add_compile_options(
     -O0
     -g3
   )
 else()
-  add_compile_definitions(-DNDEBUG=1)
+  add_compile_definitions(NDEBUG=1)
 endif()
 
 file(GLOB SOURCE_FILES CONFIGURE_DEPENDS
@@ -42,6 +42,7 @@ file(GLOB SOURCE_FILES CONFIGURE_DEPENDS
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/*/ports/rp2040/*.c
 )
 if(USE_WIFI)
+  add_compile_definitions(USE_WIFI=1)
   file(GLOB ADD_WIFI_SOURCE_FILES CONFIGURE_DEPENDS
     ${PICO_SDK_PATH}/src/rp2_common/pico_mbedtls/pico_mbedtls.c
   )
@@ -60,10 +61,11 @@ add_executable(${PROJECT_NAME}
   ${SOURCE_FILES}
 )
 
-#target_compile_definitions(${PROJECT_NAME} PRIVATE MRB_INT64=1)
 if(PICO_BOARD STREQUAL "pico" OR PICO_BOARD STREQUAL "pico_w")
+  add_compile_definitions(PICO_RP2040=1)
   target_compile_definitions(${PROJECT_NAME} PRIVATE FLASH_TARGET_OFFSET=0x00140000)
 elseif(PICO_BOARD STREQUAL "pico2" OR PICO_BOARD STREQUAL "pico2_w")
+  add_compile_definitions(PICO_RP2350=1)
   target_compile_definitions(${PROJECT_NAME} PRIVATE FLASH_TARGET_OFFSET=0x00340000)
 endif()
 
