@@ -14,11 +14,11 @@ begin
 
   Shell.bootstrap("/etc/init.d/r2p2")
 
-  $shell = Shell.new(clean: true)
+  shell = Shell.new(clean: true)
   puts "Starting shell...\n\n"
 
-  $shell.show_logo
-  $shell.start
+  shell.show_logo
+  shell.start
 rescue => e
   puts "#{e.message} (#{e.class})"
 end
