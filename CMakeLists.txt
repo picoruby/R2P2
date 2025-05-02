@@ -152,8 +152,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/${BUILD_DIR}/mrb
   ${CMAKE_CURRENT_LIST_DIR}/include
   ${CMAKE_SOURCE_DIR}/lib/picoruby/include
-  ${CMAKE_SOURCE_DIR}/lib/picoruby/build/repos/${MRUBY_CONFIG}/mruby-compiler2/lib/prism/include
-  ${CMAKE_SOURCE_DIR}/lib/picoruby/build/repos/${MRUBY_CONFIG}/mruby-compiler2/include
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/mruby-compiler2/lib/prism/include
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/mruby-compiler2/include
   ${CMAKE_SOURCE_DIR}/lib/picoruby/build/${MRUBY_CONFIG}/include
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/include
 
