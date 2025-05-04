@@ -78,10 +78,10 @@ end
     %w[pico pico_w pico2 pico2_w].each do |board|
       namespace board do
         %w[debug production].each do |mode|
-          desc "Build for #{board} with #{vm} (#{mode})"
+          desc "Build for #{board} with #{vm} VM (#{mode})"
           task mode => :check_pico_sdk do
             FileUtils.cd "lib/picoruby" do
-              sh "rake test"
+              sh "rake test" unless ENV['SKIP_TEST']
               sh "MRUBY_CONFIG=#{mruby_config(vm, board)} #{mode=='debug' ? 'PICORUBY_DEBUG=1' : ''} rake"
             end
             build_dir = "build_#{board}"
@@ -104,16 +104,20 @@ end
   end
 end
 
-desc "clean all builds"
-task :clean do
+namespace :clean do
   %w[mrubyc mruby].each do |vm|
-    %w[pico pico_w pico2 pico2_w].each do |board|
-      FileUtils.cd "lib/picoruby" do
-        if File.exist?("build_config/#{mruby_config(vm, board)}.rb")
-          sh "MRUBY_CONFIG=#{mruby_config(vm, board)} rake clean"
+    namespace vm do
+      %w[pico pico_w pico2 pico2_w].each do |board|
+        desc "Clean build for #{board} with #{vm} VM"
+        task board do
+          FileUtils.cd "lib/picoruby" do
+            if File.exist?("build_config/#{mruby_config(vm, board)}.rb")
+              sh "MRUBY_CONFIG=#{mruby_config(vm, board)} rake clean"
+            end
+          end
+          FileUtils.rm_f "build_#{board}/R2P2*.*"
         end
       end
-      sh "cmake --build build_#{board} --target clean"
     end
   end
 end
