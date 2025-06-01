@@ -104,6 +104,9 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   hardware_pwm
   pico_runtime
   pico_aon_timer
+  cmsis_core      # for RP2350
+  pico_multicore  # for RP2040
+  hardware_claim
   mruby
 )
 
@@ -126,6 +129,8 @@ if(USE_WIFI)
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/include
   )
 endif()
+
+add_compile_definitions(MRB_INT64=1)
 
 if(PICORUBY_MSC_FLASH)
   add_compile_definitions(PICORUBY_MSC_FLASH=1)
@@ -176,4 +181,3 @@ add_custom_command(
   COMMAND gzip -kf ${PROJECT_NAME}.uf2
   COMMAND zip -r ${PROJECT_NAME}.uf2.zip ${PROJECT_NAME}.uf2
 )
-
