@@ -48,9 +48,9 @@ main(void)
   global_mrb = mrb;
   mrc_irep *irep = mrb_read_irep(mrb, main_task);
   mrc_ccontext *cc = mrc_ccontext_new(mrb);
-  mrb_tcb *main_tcb = mrc_create_task(cc, irep, NULL, "R2P2");
-  main_tcb->c.ci->stack[0] = mrb_obj_value(mrb->top_self);
-  if (!main_tcb) {
+  mrb_value name = mrb_str_new_lit(mrb, "R2P2");
+  mrb_value task = mrc_create_task(cc, irep, name, mrb_nil_value(), mrb_obj_value(mrb->top_self));
+  if (mrb_nil_p(task)) {
     fprintf(stderr, "mrbc_create_task failed\n");
     ret = 1;
   }
