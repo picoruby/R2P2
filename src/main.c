@@ -9,6 +9,51 @@
 #include "picoruby.h"
 #include "main_task.c"
 
+#if defined(PICORUBY_DEBUG)
+#include "pico/stdio.h"
+#include "hardware/uart.h"
+#define DBG_UART       uart0
+#define DBG_BAUD       115200
+#define DBG_TX_PIN     0              // GPIO0 ＝ UART0 TX
+#define DBG_RX_PIN     1              // GPIO1 ＝ UART0 RX
+#define DBG_BUF_SIZE   128
+
+static void
+dbg_uart_init(void)
+{
+  uart_init(DBG_UART, DBG_BAUD);
+  gpio_set_function(DBG_TX_PIN, GPIO_FUNC_UART);
+  gpio_set_function(DBG_RX_PIN, GPIO_FUNC_UART);
+}
+
+void
+d(const char *fmt, ...)
+{
+  char buf[DBG_BUF_SIZE];
+  va_list ap;
+  va_start(ap, fmt);
+  int n = vsnprintf(buf, sizeof(buf) - 2, fmt, ap);
+  va_end(ap);
+  if (n < 0) return;
+  if (n > (sizeof(buf) - 3)) n = sizeof(buf) - 3;
+  buf[n++] = '\r';
+  buf[n++] = '\n';
+  buf[n]   = '\0';
+  uart_write_blocking(DBG_UART, (uint8_t *)buf, n);
+}
+
+#else
+
+static void dbg_uart_init(void)
+{
+}
+
+void d(const char *fmt, ...)
+{
+  (void)fmt; // No-op if debugging is not enabled
+}
+#endif
+
 #if !defined(HEAP_SIZE)
   #if defined(PICO_RP2040)
     #if defined(USE_WIFI)
@@ -39,6 +84,7 @@ int
 main(void)
 {
   stdio_init_all();
+  dbg_uart_init();
   board_init();
 
   int ret = 0;

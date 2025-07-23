@@ -15,6 +15,9 @@ if RUBY_ENGINE == "mruby"
       Time.at(tv_sec + tv_nsec)
     end
   end
+  Machine.set_hwclock(0, 0)
+else
+  Time.set_hwclock(Time.at 0)
 end
 
 begin

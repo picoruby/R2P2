@@ -61,6 +61,14 @@ add_executable(${PROJECT_NAME}
   ${SOURCE_FILES}
 )
 
+if(PICORUBY_DEBUG)
+  pico_enable_stdio_usb(${PROJECT_NAME} 0)
+  pico_enable_stdio_uart(${PROJECT_NAME} 1)
+else()
+  pico_enable_stdio_usb(${PROJECT_NAME} 0)
+  pico_enable_stdio_uart(${PROJECT_NAME} 0)
+endif()
+
 if(PICO_BOARD STREQUAL "pico" OR PICO_BOARD STREQUAL "pico_w")
   add_compile_definitions(PICO_RP2040=1)
   target_compile_definitions(${PROJECT_NAME} PRIVATE FLASH_TARGET_OFFSET=0x00140000)
@@ -90,6 +98,10 @@ target_link_directories(${PROJECT_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/lib/picoruby/build/${MRUBY_CONFIG}/lib
 )
 
+pico_generate_pio_header(${PROJECT_NAME}
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-psg/ports/rp2040/psg_drv_mcp4922_pio.pio
+)
+
 target_link_libraries(${PROJECT_NAME} PRIVATE
   pico_stdlib
   # pico_stdio_usb
@@ -107,6 +119,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   cmsis_core      # for RP2350
   pico_multicore  # for RP2040
   hardware_claim
+  hardware_pio
   mruby
 )
 

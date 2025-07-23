@@ -81,7 +81,7 @@ end
           desc "Build for #{board} with #{vm} VM (#{mode})"
           task mode => :check_pico_sdk do
             FileUtils.cd "lib/picoruby" do
-              sh "rake test" unless ENV['SKIP_TEST']
+              sh "rake test" if ENV['DO_TEST']
               sh "MRUBY_CONFIG=#{mruby_config(vm, board)} #{mode=='debug' ? 'PICORUBY_DEBUG=1' : ''} rake"
             end
             build_dir = "build_#{board}"
