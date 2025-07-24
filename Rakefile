@@ -1,5 +1,12 @@
 require "fileutils"
 
+unless ENV.include? "PICO_SDK_PATH"
+  ENV["PICO_SDK_PATH"] = "#{File.dirname(__FILE__)}/lib/pico-sdk"
+end
+unless ENV.include? "PICO_EXTRAS_PATH"
+  ENV["PICO_EXTRAS_PATH"] = "#{File.dirname(__FILE__)}/lib/pico-extras"
+end
+
 PICO_SDK_TAG = "2.1.1"
 if PICO_SDK_TAG == "2.1.1"
   PICO_EXTRAS_TAG = "sdk-2.1.0" # workaround. 2.1.1 and 2.1.0 are the same
@@ -128,7 +135,7 @@ task :check_pico_sdk => :check_pico_sdk_path do
       raise <<~MSG
         pico-sdk #{PICO_SDK_TAG} is not checked out!\n
         Tips for dealing with:\n
-        cd $PICO_SDK_PATH && git pull && git checkout #{PICO_SDK_TAG} && git submodule update --recursive\n
+        cd $PICO_SDK_PATH && git fetch origin --tags && git checkout #{PICO_SDK_TAG} && git submodule update --recursive\n
       MSG
     end
   end
@@ -137,7 +144,7 @@ task :check_pico_sdk => :check_pico_sdk_path do
       raise <<~MSG
         pico-extras #{PICO_EXTRAS_TAG} is not checked out!\n
         Tips for dealing with:\n
-        cd $PICO_EXTRAS_PATH && git pull && git checkout #{PICO_EXTRAS_TAG} && git submodule update --recursive\n
+        cd $PICO_EXTRAS_PATH && git fetch origin --tags && git checkout #{PICO_EXTRAS_TAG} && git submodule update --recursive\n
       MSG
     end
   end
