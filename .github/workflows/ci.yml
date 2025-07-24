@@ -17,7 +17,7 @@ jobs:
         submodules: 'recursive'
         fetch-tags: true
     - run: |
-        sudo apt install -y cmake ruby
+        sudo apt install -y cmake ruby gcc-arm-none-eabi
         pushd lib/pico-sdk
         git fetch origin --tags --recurse-submodules=no
         popd
