@@ -15,7 +15,14 @@ jobs:
     - uses: actions/checkout@v4
       with:
         submodules: 'recursive'
+        fetch-tags: true
     - run: |
         sudo apt install -y cmake ruby
+        pushd lib/pico-sdk
+        git fetch origin --tags --recurse-submodules=no
+        popd
+        pushd lib/pico-extras
+        git fetch origin --tags --recurse-submodules=no
+        popd
     - run: rake mrubyc:pico:debug
 
