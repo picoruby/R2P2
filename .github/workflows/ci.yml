@@ -34,7 +34,7 @@ jobs:
         popd
     - run: rake mrubyc:pico:debug
     - run: |
-        npm --prefix ./lib/rp2040js run start:micropython -- --image $PWD/build_pico/R2P2_PICO-FLASH_MSC-0.4.1*.uf2 > log.txt &
+        npm --prefix ./lib/rp2040js run start:micropython -- --image $PWD/build_pico/R2P2_PICO-FLASH*.uf2 > log.txt &
         sleep 5
         kill %1
         grep "/etc/init.d/r2p2" log.txt
