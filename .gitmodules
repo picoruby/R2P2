@@ -7,3 +7,6 @@
 [submodule "lib/pico-extras"]
 	path = lib/pico-extras
 	url = https://github.com/raspberrypi/pico-extras.git
+[submodule "lib/rp2040js"]
+	path = lib/rp2040js
+	url = https://github.com/wokwi/rp2040js.git
