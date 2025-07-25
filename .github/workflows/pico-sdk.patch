@@ -1,0 +1,13 @@
+diff --git a/src/rp2_common/hardware_flash/flash.c b/src/rp2_common/hardware_flash/flash.c
+index adae078..cfcb042 100644
+--- a/src/rp2_common/hardware_flash/flash.c
++++ b/src/rp2_common/hardware_flash/flash.c
+@@ -149,6 +149,8 @@ void __no_inline_not_in_flash_func(flash_flush_cache)(void) {
+ }
+ 
+ void __no_inline_not_in_flash_func(flash_range_program)(uint32_t flash_offs, const uint8_t *data, size_t count) {
++    asm("bkpt 27");
++    return;
+ #ifdef PICO_FLASH_SIZE_BYTES
+     hard_assert(flash_offs + count <= PICO_FLASH_SIZE_BYTES);
+ #endif
