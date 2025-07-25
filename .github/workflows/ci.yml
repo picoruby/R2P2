@@ -17,12 +17,27 @@ jobs:
         submodules: 'recursive'
         fetch-tags: true
     - run: |
-        sudo apt install -y cmake ruby gcc-arm-none-eabi
+        sudo apt install -y cmake ruby gcc-arm-none-eabi npm
         pushd lib/pico-sdk
         git fetch origin --tags --recurse-submodules=no
+        git apply < ../../.github/workflows/pico-sdk.patch
         popd
         pushd lib/pico-extras
         git fetch origin --tags --recurse-submodules=no
         popd
+        pushd lib/rp2040js
+        git apply < ../../.github/workflows/rp2040js.patch
+        npm install
+        popd
+        pushd lib/picoruby
+        git apply < ../../.github/workflows/picoruby.patch
+        popd
     - run: rake mrubyc:pico:debug
+    - run: |
+        npm --prefix ./lib/rp2040js run start:micropython -- --image $PWD/build_pico/R2P2_PICO-FLASH_MSC-0.4.1*.uf2 > log.txt &
+        sleep 5
+        kill %1
+        grep "/etc/init.d/r2p2" log.txt
+        grep "No app.(mrb|rb) found" log.txt
+
 
