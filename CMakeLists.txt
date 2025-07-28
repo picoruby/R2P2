@@ -177,6 +177,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
   ${CMAKE_CURRENT_LIST_DIR}
   ${PICO_SDK_PATH}/src/rp2_common/pico_stdio_usb/include
+  ${PICO_SDK_PATH}/src/rp2_common/hardware_dma/include
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-machine/include
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-filesystem-fat/lib/ff14b/source
   ${CMAKE_SOURCE_DIR}/lib/picoruby/build/${MRUBY_CONFIG}/mrbgems
