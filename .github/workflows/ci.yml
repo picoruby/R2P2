@@ -21,7 +21,6 @@ jobs:
         sudo apt install -y cmake ruby gcc-arm-none-eabi npm
         pushd lib/pico-sdk
         git fetch origin --tags --recurse-submodules=no
-        git apply < ../../.github/workflows/pico-sdk.patch
         popd
         pushd lib/pico-extras
         git fetch origin --tags --recurse-submodules=no
@@ -29,6 +28,9 @@ jobs:
         pushd lib/rp2040js
         git apply < ../../.github/workflows/rp2040js.patch
         npm install
+        popd
+        pushd lib/picoruby
+        git apply < ../../.github/workflows/picoruby.patch
         popd
     - run: rake mrubyc:pico:debug
     - run: |
