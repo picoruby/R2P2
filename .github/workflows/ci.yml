@@ -30,9 +30,6 @@ jobs:
         git apply < ../../.github/workflows/rp2040js.patch
         npm install
         popd
-        pushd lib/picoruby
-        git apply < ../../.github/workflows/picoruby.patch
-        popd
     - run: rake mrubyc:pico:debug
     - run: |
         set -eux
