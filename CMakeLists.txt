@@ -40,6 +40,7 @@ endif()
 file(GLOB SOURCE_FILES CONFIGURE_DEPENDS
   src/*.c
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/*/ports/rp2040/*.c
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/*/ports/common/*.c
 )
 if(USE_WIFI)
   add_compile_definitions(USE_WIFI=1)
@@ -61,11 +62,10 @@ add_executable(${PROJECT_NAME}
   ${SOURCE_FILES}
 )
 
+pico_enable_stdio_usb(${PROJECT_NAME} 0)
 if(PICORUBY_DEBUG)
-  pico_enable_stdio_usb(${PROJECT_NAME} 0)
   pico_enable_stdio_uart(${PROJECT_NAME} 1)
 else()
-  pico_enable_stdio_usb(${PROJECT_NAME} 0)
   pico_enable_stdio_uart(${PROJECT_NAME} 0)
 endif()
 
@@ -104,7 +104,8 @@ pico_generate_pio_header(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
   pico_stdlib
-  # pico_stdio_usb
+  pico_stdio
+  pico_stdio_uart
   pico_bootsel_via_double_reset
   tinyusb_device
   tinyusb_board
@@ -120,6 +121,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   pico_multicore  # for RP2040
   hardware_claim
   hardware_pio
+  hardware_dma
   mruby
 )
 
