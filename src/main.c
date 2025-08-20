@@ -61,6 +61,10 @@ main(void)
   else {
     mrb_tasks_run(mrb);
   }
+  if (mrb->exc) {
+    mrb_print_error(mrb);
+    ret = 1;
+  }
   mrb_close(mrb);
   mrc_ccontext_free(cc);
 #elif defined(PICORB_VM_MRUBYC)

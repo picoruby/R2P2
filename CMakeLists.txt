@@ -35,6 +35,9 @@ if(PICORUBY_DEBUG)
   )
 else()
   add_compile_definitions(NDEBUG=1)
+  add_compile_options(
+    -O2
+  )
 endif()
 
 file(GLOB SOURCE_FILES CONFIGURE_DEPENDS
@@ -101,6 +104,8 @@ target_link_directories(${PROJECT_NAME} PRIVATE
 pico_generate_pio_header(${PROJECT_NAME}
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-psg/ports/rp2040/psg_drv_mcp4922_pio.pio
 )
+
+target_link_options(${PROJECT_NAME} PRIVATE -Wl,--gc-sections)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
   pico_stdlib
