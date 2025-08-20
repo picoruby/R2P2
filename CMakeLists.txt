@@ -93,7 +93,10 @@ add_dependencies(${PROJECT_NAME}
 )
 foreach(rb ${RUBY_FILES})
   add_custom_target(${rb}
-    COMMAND ${PICORBC} -B${rb} -o${CMAKE_SOURCE_DIR}/${BUILD_DIR}/mrb/${rb}.c ${CMAKE_SOURCE_DIR}/mrblib/${rb}.rb
+    COMMAND
+      mkdir -p ${CMAKE_SOURCE_DIR}/${BUILD_DIR}/mrb &&
+      ${PICORBC} -B${rb} -o${CMAKE_SOURCE_DIR}/${BUILD_DIR}/mrb/${rb}.c ${CMAKE_SOURCE_DIR}/mrblib/${rb}.rb
+    DEPENDS ${CMAKE_SOURCE_DIR}/mrblib/${rb}.rb
   )
 endforeach(rb)
 

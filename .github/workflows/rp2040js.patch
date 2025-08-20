@@ -1,0 +1,55 @@
+diff --git a/demo/micropython-run.ts b/demo/micropython-run.ts
+index 2eed868..4c24513 100644
+--- a/demo/micropython-run.ts
++++ b/demo/micropython-run.ts
+@@ -6,6 +6,7 @@ import { USBCDC } from '../src/usb/cdc.js';
+ import { ConsoleLogger, LogLevel } from '../src/utils/logging.js';
+ import { bootromB1 } from './bootrom.js';
+ import { loadCircuitpythonFlashImage, loadMicropythonFlashImage, loadUF2 } from './load-flash.js';
++import { RP2040SysInfo } from '../src/peripherals/sysinfo.js';
+ 
+ const args = minimist(process.argv.slice(2), {
+   string: [
+@@ -90,5 +91,42 @@ process.stdin.on('data', (chunk) => {
+   }
+ });
+ 
++export class CustomRP2040SysInfo extends RP2040SysInfo {
++  readUint32(offset: number) {
++    const PLATFORM = 0x4;
++    switch (offset) {
++      case PLATFORM:
++        return 0x01000002;
++    }
++    return super.readUint32(offset);
++  }
++}
++
++mcu.peripherals[0x40000] = new CustomRP2040SysInfo(mcu, 'SYSINFO_BASE');
++
++mcu.onBreak = (code) => {
++  // TODO: raise HardFault exception
++  // console.error('Breakpoint!', code);
++  // console.log(code);
++
++  if(code == 27){
++    const this_ = mcu.core;
++    const RAM_START_ADDRESS = 0x20000000;
++    const flashAddr = this_.registers[0];
++    const ramAddr = this_.registers[1] - RAM_START_ADDRESS;
++    const count = this_.registers[2];
++
++    // console.log("flash write:", flashAddr, ramAddr, count)
++
++    mcu.flash.set(mcu.sram.slice(ramAddr, ramAddr+count), flashAddr);
++
++    // Copy LR to PC register
++    // this.registers[15] = this.registers[14];
++    // this_.PC = this_.LR;
++  } else {
++    simulator.stop();
++  }
++};
++
+ simulator.rp2040.core.PC = 0x10000000;
+ simulator.execute();

@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: 'recursive'
+        fetch-tags: true
+    - run: |
+        sudo apt remove man-db
+        sudo apt install -y cmake ruby gcc-arm-none-eabi npm
+        pushd lib/pico-sdk
+        git fetch origin --tags --recurse-submodules=no
+        popd
+        pushd lib/pico-extras
+        git fetch origin --tags --recurse-submodules=no
+        popd
+        pushd lib/rp2040js
+        git apply < ../../.github/workflows/rp2040js.patch
+        npm install
+        popd
+    - run: rake mrubyc:pico:debug
+    - run: |
+        set -eux
+        npm --prefix ./lib/rp2040js run start:micropython -- --image $PWD/build_pico/R2P2_PICO-FLASH*.uf2 | tee log.txt &
+        sleep 10
+        kill -9 %1
+        # cat log.txt
+        grep "/etc/init.d/r2p2" log.txt
+        # grep "No app.(mrb|rb) found" log.txt
+
+
