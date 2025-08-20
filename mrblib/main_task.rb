@@ -2,6 +2,7 @@ require "machine"
 require "watchdog"
 Watchdog.disable
 require "shell"
+require "irq"
 STDOUT = IO.new
 STDIN = IO.new
 
