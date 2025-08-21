@@ -16,17 +16,26 @@ jobs:
       with:
         submodules: 'recursive'
         fetch-tags: true
-    - run: |
+    - name: Install dependencies
+      run: |
+        sudo apt update
         sudo apt remove man-db
         sudo apt install -y cmake ruby gcc-arm-none-eabi npm
+    - name: Update pico-sdk
+      run: |
         pushd lib/pico-sdk
         git fetch origin --tags --recurse-submodules=no
+        git submodule update --init lib/tinyusb
         popd
+    - name: Update pico-extras
+      run: |
         pushd lib/pico-extras
         git fetch origin --tags --recurse-submodules=no
         popd
+    - name: Setup rp2040js
+      run: |
         pushd lib/rp2040js
-        git apply < ../../.github/workflows/rp2040js.patch
+        git apply < ../../.github/workflows/rp2040js.patch || echo "Patch may already be applied"
         npm install
         popd
     - run: rake mrubyc:pico:debug
