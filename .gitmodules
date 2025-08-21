@@ -1,6 +1,6 @@
 [submodule "lib/picoruby"]
 	path = lib/picoruby
-	url = git@github.com:picoruby/picoruby.git
+	url = https://github.com/picoruby/picoruby.git
 [submodule "lib/pico-sdk"]
 	path = lib/pico-sdk
 	url = https://github.com/raspberrypi/pico-sdk.git

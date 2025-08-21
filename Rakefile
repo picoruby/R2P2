@@ -135,7 +135,10 @@ task :check_pico_sdk => :check_pico_sdk_path do
       raise <<~MSG
         pico-sdk #{PICO_SDK_TAG} is not checked out!\n
         Tips for dealing with:\n
-        cd $PICO_SDK_PATH && git fetch origin --tags && git checkout #{PICO_SDK_TAG} && git submodule update --recursive\n
+        cd #{ENV['PICO_SDK_PATH']} && \\
+          git fetch origin --tags && \\
+          git checkout #{PICO_SDK_TAG} && \\
+          git submodule update --recursive\n
       MSG
     end
   end
@@ -144,7 +147,10 @@ task :check_pico_sdk => :check_pico_sdk_path do
       raise <<~MSG
         pico-extras #{PICO_EXTRAS_TAG} is not checked out!\n
         Tips for dealing with:\n
-        cd $PICO_EXTRAS_PATH && git fetch origin --tags && git checkout #{PICO_EXTRAS_TAG} && git submodule update --recursive\n
+        cd #{ENV['PICO_EXTRAS_PATH']} && \\
+          git fetch origin --tags && \\
+          git checkout #{PICO_EXTRAS_TAG} && \\
+          git submodule update --recursive\n
       MSG
     end
   end
