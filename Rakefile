@@ -7,12 +7,8 @@ unless ENV.include? "PICO_EXTRAS_PATH"
   ENV["PICO_EXTRAS_PATH"] = "#{File.dirname(__FILE__)}/lib/pico-extras"
 end
 
-PICO_SDK_TAG = "2.1.1"
-if PICO_SDK_TAG == "2.1.1"
-  PICO_EXTRAS_TAG = "sdk-2.1.0" # workaround. 2.1.1 and 2.1.0 are the same
-else
-  PICO_EXTRAS_TAG = "sdk-#{PICO_SDK_TAG}"
-end
+PICO_SDK_TAG = "2.2.0"
+PICO_EXTRAS_TAG = "sdk-#{PICO_SDK_TAG}"
 
 def mruby_config(vm, board)
   name = (vm == 'mruby' ? 'microruby-' : '')
