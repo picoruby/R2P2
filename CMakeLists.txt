@@ -80,6 +80,10 @@ elseif(PICO_BOARD STREQUAL "pico2" OR PICO_BOARD STREQUAL "pico2_w")
   target_compile_definitions(${PROJECT_NAME} PRIVATE FLASH_TARGET_OFFSET=0x00340000)
 endif()
 
+# Fix for pico-sdk 2.2.0: Assume core1 is safe for flash operations
+# Core1 is used for PSG audio processing but doesn't access flash during BTStack operations
+add_compile_definitions(PICO_FLASH_ASSUME_CORE1_SAFE=1)
+
 set(PICORBC ${CMAKE_SOURCE_DIR}/lib/picoruby/bin/picorbc)
 
 add_custom_target(mrbdir ALL
@@ -192,8 +196,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-filesystem-fat/lib/ff14b/source
   ${CMAKE_SOURCE_DIR}/lib/picoruby/build/${MRUBY_CONFIG}/mrbgems
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mbedtls/include
-  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mbedtls/mbedtls/include
-  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mbedtls/mbedtls/library
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mbedtls/lib/mbedtls/include
+  ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mbedtls/lib/mbedtls/library
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/include
 )
 
