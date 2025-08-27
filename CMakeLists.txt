@@ -61,6 +61,13 @@ else()
   list(REMOVE_ITEM SOURCE_FILES ${REMOVE_WIFI_SRCS})
 endif()
 
+if(PICORB_VM_MRUBYC)
+  file(GLOB REMOVE_MRUBY_SRCS CONFIGURE_DEPENDS
+    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mruby/ports/rp2040/*.c
+  )
+  list(REMOVE_ITEM SOURCE_FILES ${REMOVE_MRUBY_SRCS})
+endif()
+
 add_executable(${PROJECT_NAME}
   ${SOURCE_FILES}
 )
