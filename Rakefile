@@ -118,7 +118,7 @@ namespace :clean do
               sh "MRUBY_CONFIG=#{mruby_config(vm, board)} rake clean"
             end
           end
-          FileUtils.rm_f "build_#{board}/R2P2*.*"
+          FileUtils.rm_f(Dir["build_#{board}/R2P2*.*"])
         end
       end
     end
