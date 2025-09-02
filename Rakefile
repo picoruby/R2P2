@@ -11,17 +11,7 @@ PICO_SDK_TAG = "2.2.0"
 PICO_EXTRAS_TAG = "sdk-#{PICO_SDK_TAG}"
 
 def mruby_config(vm, board)
-  name = (vm == 'mruby' ? 'microruby-' : '')
-  case board
-  when 'pico2'
-    "r2p2-#{name}cortex-m33"
-  when 'pico_w'
-    "r2p2_w-#{name}cortex-m0plus"
-  when 'pico2_w'
-    "r2p2_w-#{name}cortex-m33"
-  else
-    "r2p2-#{name}cortex-m0plus"
-  end
+  "r2p2-#{vm}-#{board}"
 end
 
 def def_board(board)
@@ -46,27 +36,20 @@ def def_build_type(mode)
   end
 end
 
-def def_r2p2_name(board)
-  case board
-  when 'pico'
-    '-D R2P2_NAME=R2P2_PICO'
-  when 'pico2'
-    '-D R2P2_NAME=R2P2_PICO2'
-  when 'pico_w'
-    '-D R2P2_NAME=R2P2_PICO_W'
-  when 'pico2_w'
-    '-D R2P2_NAME=R2P2_PICO2_W'
-  else
-    raise "Unknown board: #{board}"
-  end
+def def_r2p2_name(vm, board)
+  "-D R2P2_NAME=R2P2-#{vm.upcase}-#{board.upcase}"
 end
 
 def def_msc(mode)
-  '-D PICORUBY_MSC_FLASH=1 -D MSC_NAME=FLASH_MSC'
+  '-D PICORUBY_MSC_FLASH=1'
 end
 
 def def_picorb_vm(vm)
-  vm == 'mrubyc' ? '-D PICORB_VM_MRUBYC=1' : '-D PICORB_VM_MRUBY=1'
+  vm == 'picoruby' ? '-D PICORB_VM_MRUBYC=1' : '-D PICORB_VM_MRUBY=1'
+end
+
+def build_dir(vm, board, mode)
+  "build/#{vm}/#{board}/#{mode}"
 end
 
 task :setup do
@@ -76,30 +59,31 @@ task :setup do
   end
 end
 
-%w[mrubyc mruby].each do |vm|
+%w[picoruby microruby].each do |vm|
   namespace vm do
     %w[pico pico_w pico2 pico2_w].each do |board|
       namespace board do
-        %w[debug production].each do |mode|
-          desc "Build for #{board} with #{vm} VM (#{mode})"
+        %w[debug prod].each do |mode|
+          desc "Build #{vm} for #{board} (#{mode})"
           task mode => :check_pico_sdk do
+            dir = build_dir(vm, board, mode)
+            FileUtils.mkdir_p dir
             FileUtils.cd "lib/picoruby" do
               sh "rake test" if ENV['DO_TEST']
               sh "MRUBY_CONFIG=#{mruby_config(vm, board)} #{mode=='debug' ? 'PICORUBY_DEBUG=1' : ''} rake"
             end
-            build_dir = "build_#{board}"
             defs = <<~DEFS
               -D PICO_CYW43_SUPPORTED=1 \
               -D MRUBY_CONFIG=#{mruby_config(vm, board)} \
-              -D BUILD_DIR=#{build_dir} \
+              -D BUILD_DIR=#{dir} \
               #{def_picorb_vm(vm)} \
-              #{def_r2p2_name(board)} \
+              #{def_r2p2_name(vm, board)} \
               #{def_board(board)} \
               #{def_build_type(mode)} \
               #{def_msc(mode)}
             DEFS
-            sh "cmake -B #{build_dir} #{defs}"
-            sh "cmake --build #{build_dir}"
+            sh "cmake -B #{dir} #{defs}"
+            sh "cmake --build #{dir}"
           end
         end
       end
@@ -108,17 +92,20 @@ end
 end
 
 namespace :clean do
-  %w[mrubyc mruby].each do |vm|
+  %w[picoruby microruby].each do |vm|
     namespace vm do
       %w[pico pico_w pico2 pico2_w].each do |board|
-        desc "Clean build for #{board} with #{vm} VM"
+        desc "Clean #{vm} for #{board} (both debug and prod)"
         task board do
           FileUtils.cd "lib/picoruby" do
             if File.exist?("build_config/#{mruby_config(vm, board)}.rb")
               sh "MRUBY_CONFIG=#{mruby_config(vm, board)} rake clean"
             end
           end
-          FileUtils.rm_f(Dir["build_#{board}/R2P2*.*"])
+          %w[debug prod].each do |mode|
+            dir = build_dir(vm, board, mode)
+            FileUtils.rm_f(Dir["#{dir}/R2P2*.*"]) if Dir.exist? dir
+          end
         end
       end
     end

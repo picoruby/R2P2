@@ -41,7 +41,7 @@ jobs:
     - run: rake mrubyc:pico:debug
     - run: |
         set -eux
-        npm --prefix ./lib/rp2040js run start:micropython -- --image $PWD/build_pico/R2P2_PICO-FLASH*.uf2 | tee log.txt &
+        npm --prefix ./lib/rp2040js run start:micropython -- --image $PWD/build/picoruby/pico/R2P2_PICO-FLASH*.uf2 | tee log.txt &
         sleep 10
         kill -9 %1
         # cat log.txt
