@@ -16,7 +16,7 @@
     #if defined(USE_WIFI)
       #define HEAP_SIZE (1024 * 140)
     #else
-      #define HEAP_SIZE (1024 * 194)
+      #define HEAP_SIZE (1024 * 174)
     #endif
   #elif defined(PICO_RP2350)
     #if defined(USE_WIFI)
