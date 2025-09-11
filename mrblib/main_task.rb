@@ -1,4 +1,5 @@
 require "machine"
+require "numeric-ext"
 require "watchdog"
 Watchdog.disable
 require "shell"

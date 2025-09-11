@@ -13,36 +13,40 @@
 
 #if !defined(HEAP_SIZE)
   #if defined(PICO_RP2040)
-    #if defined(USE_WIFI)
-      #define HEAP_SIZE (1024 * 140)
-    #else
-      #define HEAP_SIZE (1024 * 174)
-    #endif
+    #define RAM_SIZE_KB 264
   #elif defined(PICO_RP2350)
-    #if defined(USE_WIFI)
-      #define HEAP_SIZE (1024 * (150 + 200))
-    #else
-      #define HEAP_SIZE (1024 * (194 + 200))
-    #endif
+    #define RAM_SIZE_KB 524
   #else
-    #error "Unknown board"
+    #error "PICO_RP2040 or PICO_RP2350 must be defined"
   #endif
+  // Compiling a big Ruby code may need more stack size
+  #define BASIC_STACK_SIZE_KB   80
+  #define WIFI_STACK_SIZE_KB    60
+  #if defined(USE_WIFI)
+    #define STACK_SIZE_KB (BASIC_STACK_SIZE_KB + WIFI_STACK_SIZE_KB)
+  #else
+    #define STACK_SIZE_KB BASIC_STACK_SIZE_KB
+  #endif
+  #define HEAP_SIZE_KB (RAM_SIZE_KB - STACK_SIZE_KB)
+  #define HEAP_SIZE (HEAP_SIZE_KB * 1024)
 #endif
 
 #if defined(R2P2_ALLOC_LIBC)
-#define heap_pool NULL
+  #define heap_pool NULL
 #else
-static uint8_t heap_pool[HEAP_SIZE] __attribute__((aligned(8)));
+  static uint8_t heap_pool[HEAP_SIZE] __attribute__((aligned(8)));
 #endif
 
-mrb_state *global_mrb = NULL;
+#if defined(PICORB_VM_MRUBY)
+  mrb_state *global_mrb = NULL;
+#endif
 
 int
 main(void)
 {
   stdio_init_all();
   printf("R2P2 PicoRuby starting...\n");
-  printf("HEAP_SIZE: %d bytes\n", HEAP_SIZE);
+  printf("Heap size: %d KB\n", HEAP_SIZE_KB);
   board_init();
 
   int ret = 0;
