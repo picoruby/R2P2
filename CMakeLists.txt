@@ -56,6 +56,8 @@ else()
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-cyw43/ports/rp2040/*.c
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/ports/rp2040/*.c
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/ports/rp2040/*.c
+    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/ports/rp2040/*.c
+    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mbedtls/ports/**/*.c
     ${PICO_SDK_PATH}/src/rp2_common/pico_mbedtls/pico_mbedtls.c
   )
   list(REMOVE_ITEM SOURCE_FILES ${REMOVE_WIFI_SRCS})
