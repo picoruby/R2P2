@@ -146,18 +146,15 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   mruby
 )
 
-# Workaround for Pico2
+# Sleep functionality for both RP2040 and RP2350
+target_link_libraries(${PROJECT_NAME} PRIVATE
+  hardware_sleep
+)
+
+# RTC only for RP2040
 if(PICO_BOARD STREQUAL "pico" OR PICO_BOARD STREQUAL "pico_w")
   target_link_libraries(${PROJECT_NAME} PRIVATE
-    hardware_sleep
     hardware_rtc
-  )
-endif()
-
-# RP2350 specific libraries
-if(NOT PICO_RP2040)
-  target_link_libraries(${PROJECT_NAME} PRIVATE
-    hardware_powman
   )
 endif()
 
