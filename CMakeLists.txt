@@ -154,6 +154,13 @@ if(PICO_BOARD STREQUAL "pico" OR PICO_BOARD STREQUAL "pico_w")
   )
 endif()
 
+# RP2350 specific libraries
+if(NOT PICO_RP2040)
+  target_link_libraries(${PROJECT_NAME} PRIVATE
+    hardware_powman
+  )
+endif()
+
 if(USE_WIFI)
   # these are used only in WiFi build
   target_link_libraries(${PROJECT_NAME} PRIVATE
