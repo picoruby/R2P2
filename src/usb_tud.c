@@ -1,5 +1,6 @@
 #include <pico/stdlib.h>
 #include <stdio.h>
+#include "picoruby/debug.h"
 
 //--------------------------------------------------------------------+
 // Device callbacks

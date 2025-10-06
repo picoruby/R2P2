@@ -6,9 +6,12 @@
 #include <hardware/clocks.h>
 
 #include <stdio.h>
+#include <string.h>
 
 /* PicoRuby */
 #include "picoruby.h"
+#include "picoruby/debug.h"
+#include "hal.h" // in picoruby-machine
 #include "main_task.c"
 
 #if !defined(HEAP_SIZE)
@@ -45,6 +48,7 @@ int
 main(void)
 {
   stdio_init_all();
+  // printf() goes to Picoprobe UART
   printf("R2P2 PicoRuby starting...\n");
   printf("Heap size: %d KB\n", HEAP_SIZE_KB);
   board_init();
@@ -59,7 +63,8 @@ main(void)
   mrb_value name = mrb_str_new_lit(mrb, "R2P2");
   mrb_value task = mrc_create_task(cc, irep, name, mrb_nil_value(), mrb_obj_value(mrb->top_self));
   if (mrb_nil_p(task)) {
-    printf("mrbc_create_task failed\n");
+    const char *msg = "mrbc_create_task failed\n";
+    hal_write(1, msg, strlen(msg));
     ret = 1;
   }
   else {
@@ -75,7 +80,8 @@ main(void)
   mrbc_init(heap_pool, HEAP_SIZE);
   mrbc_tcb *main_tcb = mrbc_create_task(main_task, 0);
   if (!main_tcb) {
-    printf("mrbc_create_task failed\n");
+    const char *msg = "mrbc_create_task failed\n";
+    hal_write(1, msg, strlen(msg));
     ret = 1;
   }
   else {
