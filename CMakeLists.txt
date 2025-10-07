@@ -183,7 +183,6 @@ endif()
 if(PICORB_VM_MRUBY)
   add_compile_definitions(PICORB_VM_MRUBY=1)
   target_include_directories(${PROJECT_NAME} PRIVATE
-    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mruby/include
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mruby/lib/mruby/include
   )
 elseif(PICORB_VM_MRUBYC)

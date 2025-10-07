@@ -23,6 +23,29 @@ You may need to look for a fine configuration.
 
 Anyway, it seems almost problems on the terminal emulator come from CR/LF handling.
 
+### Dual CDC USB ports for debug output
+
+R2P2 uses dual CDC (Communications Device Class) USB ports to separate standard output and debug output:
+
+- **CDC 0** (in Linux, typically `/dev/ttyACM0`): Main terminal for shell interaction and application stdout
+- **CDC 1** (as in, `/dev/ttyACM1`): Debug output (stderr) for system messages and debug prints
+
+Debug output is only enabled in debug builds (`rake debug` or `PICORUBY_DEBUG=1 rake`).
+
+To view debug output:
+```sh
+# Terminal 1: Main shell
+gtkterm --port /dev/ttyACM0
+
+# Terminal 2: Debug messages
+gtkterm --port /dev/ttyACM1
+```
+
+In Ruby code, use `Machine.debug_puts` to output to the debug port:
+```ruby
+Machine.debug_puts "Debug message"
+```
+
 ## Demonstration
 
 ### Opening crawl

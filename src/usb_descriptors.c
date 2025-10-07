@@ -87,55 +87,71 @@ uint8_t const * tud_descriptor_device_cb(void)
 
 enum
 {
-  ITF_NUM_CDC = 0,
-  ITF_NUM_CDC_DATA,
+  ITF_NUM_CDC_0 = 0,
+  ITF_NUM_CDC_0_DATA,
+  ITF_NUM_CDC_1,
+  ITF_NUM_CDC_1_DATA,
   ITF_NUM_MSC,
   ITF_NUM_TOTAL
 };
 
 #if CFG_TUSB_MCU == OPT_MCU_LPC175X_6X || CFG_TUSB_MCU == OPT_MCU_LPC177X_8X || CFG_TUSB_MCU == OPT_MCU_LPC40XX
   // LPC 17xx and 40xx endpoint type (bulk/interrupt/iso) are fixed by its number
-  // 0 control, 1 In, 2 Bulk, 3 Iso, 4 In, 5 Bulk etc ...
-  #define EPNUM_CDC_NOTIF   0x81
-  #define EPNUM_CDC_OUT     0x02
-  #define EPNUM_CDC_IN      0x82
+  // 0 control, 1 In, 2 Bulk, 3 Iso, 4 In etc ...
+  #define EPNUM_CDC_0_NOTIF   0x81
+  #define EPNUM_CDC_0_OUT     0x02
+  #define EPNUM_CDC_0_IN      0x82
 
-  #define EPNUM_MSC_OUT     0x05
-  #define EPNUM_MSC_IN      0x85
+  #define EPNUM_CDC_1_NOTIF   0x84
+  #define EPNUM_CDC_1_OUT     0x05
+  #define EPNUM_CDC_1_IN      0x85
 
-#elif CFG_TUSB_MCU == OPT_MCU_SAMG  || CFG_TUSB_MCU ==  OPT_MCU_SAMX7X
-  // SAMG & SAME70 don't support a same endpoint number with different direction IN and OUT
-  //    e.g EP1 OUT & EP1 IN cannot exist together
-  #define EPNUM_CDC_NOTIF   0x81
-  #define EPNUM_CDC_OUT     0x02
-  #define EPNUM_CDC_IN      0x83
-
-  #define EPNUM_MSC_OUT     0x04
-  #define EPNUM_MSC_IN      0x85
+  #define EPNUM_MSC_OUT       0x08
+  #define EPNUM_MSC_IN        0x88
 
 #elif CFG_TUSB_MCU == OPT_MCU_CXD56
-  // CXD56 doesn't support a same endpoint number with different direction IN and OUT
-  //    e.g EP1 OUT & EP1 IN cannot exist together
   // CXD56 USB driver has fixed endpoint type (bulk/interrupt/iso) and direction (IN/OUT) by its number
   // 0 control (IN/OUT), 1 Bulk (IN), 2 Bulk (OUT), 3 In (IN), 4 Bulk (IN), 5 Bulk (OUT), 6 In (IN)
-  #define EPNUM_CDC_NOTIF   0x83
-  #define EPNUM_CDC_OUT     0x02
-  #define EPNUM_CDC_IN      0x81
+  #define EPNUM_CDC_0_NOTIF   0x83
+  #define EPNUM_CDC_0_OUT     0x02
+  #define EPNUM_CDC_0_IN      0x81
 
-  #define EPNUM_MSC_OUT     0x05
-  #define EPNUM_MSC_IN      0x84
+  #define EPNUM_CDC_1_NOTIF   0x86
+  #define EPNUM_CDC_1_OUT     0x05
+  #define EPNUM_CDC_1_IN      0x84
+
+  #define EPNUM_MSC_OUT       0x07
+  #define EPNUM_MSC_IN        0x08
+
+#elif defined(TUD_ENDPOINT_ONE_DIRECTION_ONLY)
+  // MCUs that don't support a same endpoint number with different direction IN and OUT
+  //    e.g EP1 OUT & EP1 IN cannot exist together
+  #define EPNUM_CDC_0_NOTIF   0x81
+  #define EPNUM_CDC_0_OUT     0x02
+  #define EPNUM_CDC_0_IN      0x83
+
+  #define EPNUM_CDC_1_NOTIF   0x84
+  #define EPNUM_CDC_1_OUT     0x05
+  #define EPNUM_CDC_1_IN      0x86
+
+  #define EPNUM_MSC_OUT       0x07
+  #define EPNUM_MSC_IN        0x88
 
 #else
-  #define EPNUM_CDC_NOTIF   0x81
-  #define EPNUM_CDC_OUT     0x02
-  #define EPNUM_CDC_IN      0x82
+  #define EPNUM_CDC_0_NOTIF   0x81
+  #define EPNUM_CDC_0_OUT     0x02
+  #define EPNUM_CDC_0_IN      0x82
 
-  #define EPNUM_MSC_OUT     0x03
-  #define EPNUM_MSC_IN      0x83
+  #define EPNUM_CDC_1_NOTIF   0x83
+  #define EPNUM_CDC_1_OUT     0x04
+  #define EPNUM_CDC_1_IN      0x84
+
+  #define EPNUM_MSC_OUT       0x05
+  #define EPNUM_MSC_IN        0x85
 
 #endif
 
-#define CONFIG_TOTAL_LEN    (TUD_CONFIG_DESC_LEN + TUD_CDC_DESC_LEN + TUD_MSC_DESC_LEN)
+#define CONFIG_TOTAL_LEN    (TUD_CONFIG_DESC_LEN + CFG_TUD_CDC * TUD_CDC_DESC_LEN + TUD_MSC_DESC_LEN)
 
 // full speed configuration
 uint8_t const desc_fs_configuration[] =
@@ -143,8 +159,11 @@ uint8_t const desc_fs_configuration[] =
   // Config number, interface count, string index, total length, attribute, power in mA
   TUD_CONFIG_DESCRIPTOR(1, ITF_NUM_TOTAL, 0, CONFIG_TOTAL_LEN, 0x00, 100),
 
-  // Interface number, string index, EP notification address and size, EP data address (out, in) and size.
-  TUD_CDC_DESCRIPTOR(ITF_NUM_CDC, 4, EPNUM_CDC_NOTIF, 8, EPNUM_CDC_OUT, EPNUM_CDC_IN, 64),
+  // 1st CDC: Interface number, string index, EP notification address and size, EP data address (out, in) and size.
+  TUD_CDC_DESCRIPTOR(ITF_NUM_CDC_0, 4, EPNUM_CDC_0_NOTIF, 8, EPNUM_CDC_0_OUT, EPNUM_CDC_0_IN, 64),
+
+  // 2nd CDC: Interface number, string index, EP notification address and size, EP data address (out, in) and size.
+  TUD_CDC_DESCRIPTOR(ITF_NUM_CDC_1, 6, EPNUM_CDC_1_NOTIF, 8, EPNUM_CDC_1_OUT, EPNUM_CDC_1_IN, 64),
 
   // Interface number, string index, EP Out & EP In address, EP size
   TUD_MSC_DESCRIPTOR(ITF_NUM_MSC, 5, EPNUM_MSC_OUT, EPNUM_MSC_IN, 64),
@@ -159,8 +178,11 @@ uint8_t const desc_hs_configuration[] =
   // Config number, interface count, string index, total length, attribute, power in mA
   TUD_CONFIG_DESCRIPTOR(1, ITF_NUM_TOTAL, 0, CONFIG_TOTAL_LEN, 0x00, 100),
 
-  // Interface number, string index, EP notification address and size, EP data address (out, in) and size.
-  TUD_CDC_DESCRIPTOR(ITF_NUM_CDC, 4, EPNUM_CDC_NOTIF, 8, EPNUM_CDC_OUT, EPNUM_CDC_IN, 512),
+  // 1st CDC: Interface number, string index, EP notification address and size, EP data address (out, in) and size.
+  TUD_CDC_DESCRIPTOR(ITF_NUM_CDC_0, 4, EPNUM_CDC_0_NOTIF, 8, EPNUM_CDC_0_OUT, EPNUM_CDC_0_IN, 512),
+
+  // 2nd CDC: Interface number, string index, EP notification address and size, EP data address (out, in) and size.
+  TUD_CDC_DESCRIPTOR(ITF_NUM_CDC_1, 6, EPNUM_CDC_1_NOTIF, 8, EPNUM_CDC_1_OUT, EPNUM_CDC_1_IN, 512),
 
   // Interface number, string index, EP Out & EP In address, EP size
   TUD_MSC_DESCRIPTOR(ITF_NUM_MSC, 5, EPNUM_MSC_OUT, EPNUM_MSC_IN, 512),
@@ -249,8 +271,9 @@ char const *string_desc_arr[] =
   "PicoRuby",                    // 1: Manufacturer
   "R2P2",                        // 2: Product
   NULL,                          // 3: Serials will use unique ID if possible
-  "PicoRuby CDC",                // 4: CDC Interface
+  "PicoRuby CDC",                // 4: CDC Interface 0 (Application)
   "PicoRuby MSC",                // 5: MSC Interface
+  "PicoRuby CDC Debug",          // 6: CDC Interface 1 (Debug)
 };
 
 static uint16_t _desc_str[32 + 1];
