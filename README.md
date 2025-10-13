@@ -30,7 +30,7 @@ R2P2 uses dual CDC (Communications Device Class) USB ports to separate standard 
 - **CDC 0** (in Linux, typically `/dev/ttyACM0`): Main terminal for shell interaction and application stdout
 - **CDC 1** (as in, `/dev/ttyACM1`): Debug output (stderr) for system messages and debug prints
 
-Debug output is only enabled in debug builds (`rake debug` or `PICORUBY_DEBUG=1 rake`).
+Debug output is only enabled in debug builds (e.g., `rake picoruby:pico:debug`).
 
 To view debug output:
 ```sh
@@ -129,15 +129,20 @@ brew install --cask gcc-arm-embedded
 git clone https://github.com/picoruby/R2P2.git
 cd R2P2
 rake setup
-rake
+rake picoruby:pico:prod
 ```
 
 You'll find an executable in `build` directory.
 
+For other boards, use:
+- `rake picoruby:pico_w:prod` (Pico W)
+- `rake picoruby:pico2:prod` (Pico 2)
+- `rake picoruby:pico2_w:prod` (Pico 2 W)
+
 ### Debug build
 
 ```
-rake debug
+rake picoruby:pico:debug
 ```
 
 The elf file can be debugged with Picoprobe and gdb-multiarch.
