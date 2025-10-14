@@ -1,5 +1,7 @@
+if RUBY_ENGINE == "mruby/c"
+  require "numeric-ext"
+end
 require "machine"
-require "numeric-ext"
 require "watchdog"
 Watchdog.disable
 require "shell"
