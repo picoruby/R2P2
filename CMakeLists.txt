@@ -113,6 +113,7 @@ foreach(rb ${RUBY_FILES})
 endforeach(rb)
 
 target_link_directories(${PROJECT_NAME} PRIVATE
+  ${EXTRA_LIBRARY_PATH}
   ${CMAKE_SOURCE_DIR}/lib/picoruby/build/${MRUBY_CONFIG}/lib
 )
 
@@ -210,6 +211,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mbedtls/lib/mbedtls/include
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mbedtls/lib/mbedtls/library
   ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/include
+  ${EXTRA_INCLUDE_DIR}
 )
 
 pico_add_extra_outputs(${PROJECT_NAME})

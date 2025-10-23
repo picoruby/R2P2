@@ -20,7 +20,7 @@
     #define WIFI_STACK_SIZE_KB   31
   #elif defined(PICO_RP2350)
     #define RAM_SIZE_KB         524
-    #define WIFI_STACK_SIZE_KB   45
+    #define WIFI_STACK_SIZE_KB   80
   #else
     #error "PICO_RP2040 or PICO_RP2350 must be defined"
   #endif

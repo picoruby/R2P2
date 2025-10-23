@@ -11,7 +11,11 @@ PICO_SDK_TAG = "2.2.0"
 PICO_EXTRAS_TAG = "sdk-#{PICO_SDK_TAG}"
 
 def mruby_config(vm, board)
-  "r2p2-#{vm}-#{board}"
+  "#{File.expand_path('..', __FILE__)}/build_config/r2p2-#{vm}-#{board}.rb"
+end
+
+def mruby_build_path(vm, board)
+  "#{File.expand_path('..', __FILE__)}/lib/picoruby/build/r2p2-#{vm}-#{board}"
 end
 
 def def_board(board)
@@ -73,6 +77,8 @@ end
               sh "MRUBY_CONFIG=#{mruby_config(vm, board)} #{mode=='debug' ? 'PICORUBY_DEBUG=1' : ''} rake"
             end
             defs = <<~DEFS
+              -D EXTRA_LIBRARY_PATH=#{mruby_build_path(vm, board)}/lib \
+              -D EXTRA_INCLUDE_DIR=#{mruby_build_path(vm, board)}/include \
               -D PICO_CYW43_SUPPORTED=1 \
               -D MRUBY_CONFIG=#{mruby_config(vm, board)} \
               -D BUILD_DIR=#{dir} \
