@@ -104,8 +104,9 @@ namespace :clean do
         desc "Clean #{vm} for #{board} (both debug and prod)"
         task board do
           FileUtils.cd "lib/picoruby" do
-            if File.exist?("build_config/#{mruby_config(vm, board)}.rb")
-              sh "MRUBY_CONFIG=#{mruby_config(vm, board)} rake clean"
+            config = mruby_config(vm, board)
+            if File.exist?(config)
+              sh "MRUBY_CONFIG=#{config} rake clean"
             end
           end
           %w[debug prod].each do |mode|
