@@ -123,6 +123,12 @@ pico_generate_pio_header(${PROJECT_NAME}
 
 target_link_options(${PROJECT_NAME} PRIVATE -Wl,--gc-sections)
 
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+  PICO_STACK_SIZE=0x1000       # 4KB
+  PICO_CORE1_STACK_SIZE=0x0800 # 2KB
+  PICO_HEAP_SIZE=0x0400        # 1KB
+)
+
 target_link_libraries(${PROJECT_NAME} PRIVATE
   pico_stdlib
   pico_stdio
