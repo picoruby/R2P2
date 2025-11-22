@@ -51,16 +51,27 @@ if(USE_WIFI)
     ${PICO_SDK_PATH}/src/rp2_common/pico_mbedtls/pico_mbedtls.c
   )
   list(APPEND SOURCE_FILES ${ADD_WIFI_SOURCE_FILES})
+  if(PICO_BOARD STREQUAL "pico2_w")
+    file(GLOB REMOVE_WIFI_SRCS CONFIGURE_DEPENDS
+      ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/ports/rp2040/*.c
+    )
+  else()
+    file(GLOB REMOVE_WIFI_SRCS CONFIGURE_DEPENDS
+      ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-socket/ports/rp2040/*.c
+    )
+  endif()
 else()
   file(GLOB REMOVE_WIFI_SRCS CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-cyw43/ports/rp2040/*.c
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-net/ports/rp2040/*.c
+    ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-socket/ports/rp2040/*.c
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-ble/ports/rp2040/*.c
     ${CMAKE_SOURCE_DIR}/lib/picoruby/mrbgems/picoruby-mbedtls/ports/**/*.c
     ${PICO_SDK_PATH}/src/rp2_common/pico_mbedtls/pico_mbedtls.c
   )
-  list(REMOVE_ITEM SOURCE_FILES ${REMOVE_WIFI_SRCS})
 endif()
+
+list(REMOVE_ITEM SOURCE_FILES ${REMOVE_WIFI_SRCS})
 
 if(PICORB_VM_MRUBYC)
   file(GLOB REMOVE_MRUBY_SRCS CONFIGURE_DEPENDS

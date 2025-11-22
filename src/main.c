@@ -17,7 +17,7 @@
 #if !defined(HEAP_SIZE)
   #if defined(PICO_RP2040)
     #define RAM_SIZE_KB         264
-    #define WIFI_STACK_SIZE_KB   31
+    #define WIFI_STACK_SIZE_KB   32
   #elif defined(PICO_RP2350)
     #define RAM_SIZE_KB         524
     #define WIFI_STACK_SIZE_KB   80

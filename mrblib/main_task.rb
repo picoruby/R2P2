@@ -9,7 +9,7 @@ require "irq"
 STDOUT = IO.new
 STDIN = IO.new
 
-Machine.set_hwclock(0, 0)
+Machine.set_hwclock(0)
 
 begin
   sleep 1
