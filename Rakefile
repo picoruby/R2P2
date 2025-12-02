@@ -92,17 +92,9 @@ end
             sh "cmake --build #{dir}"
           end
         end
-      end
-    end
-  end
-end
 
-namespace :clean do
-  %w[picoruby microruby].each do |vm|
-    namespace vm do
-      %w[pico pico_w pico2 pico2_w].each do |board|
         desc "Clean #{vm} for #{board} (both debug and prod)"
-        task board do
+        task :clean do
           FileUtils.cd "lib/picoruby" do
             config = mruby_config(vm, board)
             if File.exist?(config)
