@@ -115,7 +115,7 @@
 //------------- CLASS -------------//
 #define CFG_TUD_CDC              2
 #define CFG_TUD_MSC              1
-#define CFG_TUD_HID              0
+#define CFG_TUD_HID              3
 #define CFG_TUD_MIDI             0
 #define CFG_TUD_VENDOR           0
 
@@ -125,6 +125,9 @@
 
 // CDC Endpoint transfer buffer size, more is faster
 #define CFG_TUD_CDC_EP_BUFSIZE    512
+
+// HID buffer size
+#define CFG_TUD_HID_EP_BUFSIZE    16
 
 // MSC Buffer size of Device Mass storage
 #if defined(PICORUBY_MSC_FLASH)

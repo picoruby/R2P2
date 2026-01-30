@@ -45,4 +45,6 @@ MRuby::CrossBuild.new("r2p2-picoruby-pico") do |conf|
   conf.gembox "shell"
   conf.gembox "peripherals"
   conf.gembox "peripheral_utils"
+  conf.gem core: 'picoruby-usb-hid'
+  conf.gem core: 'picoruby-keyboard-matrix'
 end
