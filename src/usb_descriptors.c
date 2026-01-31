@@ -112,6 +112,10 @@ enum
   #define EPNUM_MSC_OUT       0x08
   #define EPNUM_MSC_IN        0x88
 
+  #define EPNUM_HID_KEYBOARD  0x89
+  #define EPNUM_HID_MOUSE     0x8A
+  #define EPNUM_HID_CONSUMER  0x8B
+
 #elif CFG_TUSB_MCU == OPT_MCU_CXD56
   // CXD56 USB driver has fixed endpoint type (bulk/interrupt/iso) and direction (IN/OUT) by its number
   // 0 control (IN/OUT), 1 Bulk (IN), 2 Bulk (OUT), 3 In (IN), 4 Bulk (IN), 5 Bulk (OUT), 6 In (IN)
@@ -126,6 +130,10 @@ enum
   #define EPNUM_MSC_OUT       0x07
   #define EPNUM_MSC_IN        0x08
 
+  #define EPNUM_HID_KEYBOARD  0x89
+  #define EPNUM_HID_MOUSE     0x8A
+  #define EPNUM_HID_CONSUMER  0x8B
+
 #elif defined(TUD_ENDPOINT_ONE_DIRECTION_ONLY)
   // MCUs that don't support a same endpoint number with different direction IN and OUT
   //    e.g EP1 OUT & EP1 IN cannot exist together
@@ -139,6 +147,10 @@ enum
 
   #define EPNUM_MSC_OUT       0x07
   #define EPNUM_MSC_IN        0x88
+
+  #define EPNUM_HID_KEYBOARD  0x89
+  #define EPNUM_HID_MOUSE     0x8A
+  #define EPNUM_HID_CONSUMER  0x8B
 
 #else
   #define EPNUM_CDC_0_NOTIF   0x81
