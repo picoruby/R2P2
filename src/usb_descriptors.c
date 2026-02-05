@@ -92,6 +92,9 @@ enum
   ITF_NUM_CDC_1,
   ITF_NUM_CDC_1_DATA,
   ITF_NUM_MSC,
+  ITF_NUM_HID_KEYBOARD,
+  ITF_NUM_HID_MOUSE,
+  ITF_NUM_HID_CONSUMER,
   ITF_NUM_TOTAL
 };
 
@@ -109,6 +112,10 @@ enum
   #define EPNUM_MSC_OUT       0x08
   #define EPNUM_MSC_IN        0x88
 
+  #define EPNUM_HID_KEYBOARD  0x89
+  #define EPNUM_HID_MOUSE     0x8A
+  #define EPNUM_HID_CONSUMER  0x8B
+
 #elif CFG_TUSB_MCU == OPT_MCU_CXD56
   // CXD56 USB driver has fixed endpoint type (bulk/interrupt/iso) and direction (IN/OUT) by its number
   // 0 control (IN/OUT), 1 Bulk (IN), 2 Bulk (OUT), 3 In (IN), 4 Bulk (IN), 5 Bulk (OUT), 6 In (IN)
@@ -122,6 +129,10 @@ enum
 
   #define EPNUM_MSC_OUT       0x07
   #define EPNUM_MSC_IN        0x08
+
+  #define EPNUM_HID_KEYBOARD  0x89
+  #define EPNUM_HID_MOUSE     0x8A
+  #define EPNUM_HID_CONSUMER  0x8B
 
 #elif defined(TUD_ENDPOINT_ONE_DIRECTION_ONLY)
   // MCUs that don't support a same endpoint number with different direction IN and OUT
@@ -137,6 +148,10 @@ enum
   #define EPNUM_MSC_OUT       0x07
   #define EPNUM_MSC_IN        0x88
 
+  #define EPNUM_HID_KEYBOARD  0x89
+  #define EPNUM_HID_MOUSE     0x8A
+  #define EPNUM_HID_CONSUMER  0x8B
+
 #else
   #define EPNUM_CDC_0_NOTIF   0x81
   #define EPNUM_CDC_0_OUT     0x02
@@ -149,9 +164,43 @@ enum
   #define EPNUM_MSC_OUT       0x05
   #define EPNUM_MSC_IN        0x85
 
+  #define EPNUM_HID_KEYBOARD  0x86
+  #define EPNUM_HID_MOUSE     0x87
+  #define EPNUM_HID_CONSUMER  0x88
+
 #endif
 
-#define CONFIG_TOTAL_LEN    (TUD_CONFIG_DESC_LEN + CFG_TUD_CDC * TUD_CDC_DESC_LEN + TUD_MSC_DESC_LEN)
+#define CONFIG_TOTAL_LEN    (TUD_CONFIG_DESC_LEN + CFG_TUD_CDC * TUD_CDC_DESC_LEN + TUD_MSC_DESC_LEN + CFG_TUD_HID * TUD_HID_DESC_LEN)
+
+// HID Report Descriptor for Keyboard
+uint8_t const desc_hid_keyboard_report[] =
+{
+  TUD_HID_REPORT_DESC_KEYBOARD()
+};
+
+// HID Report Descriptor for Mouse
+uint8_t const desc_hid_mouse_report[] =
+{
+  TUD_HID_REPORT_DESC_MOUSE()
+};
+
+// HID Report Descriptor for Consumer Control
+uint8_t const desc_hid_consumer_report[] =
+{
+  TUD_HID_REPORT_DESC_CONSUMER()
+};
+
+// Required callback for HID report descriptor
+uint8_t const * tud_hid_descriptor_report_cb(uint8_t instance)
+{
+  switch(instance)
+  {
+    case 0: return desc_hid_keyboard_report;
+    case 1: return desc_hid_mouse_report;
+    case 2: return desc_hid_consumer_report;
+    default: return NULL;
+  }
+}
 
 // full speed configuration
 uint8_t const desc_fs_configuration[] =
@@ -167,6 +216,15 @@ uint8_t const desc_fs_configuration[] =
 
   // Interface number, string index, EP Out & EP In address, EP size
   TUD_MSC_DESCRIPTOR(ITF_NUM_MSC, 5, EPNUM_MSC_OUT, EPNUM_MSC_IN, 64),
+
+  // HID Keyboard
+  TUD_HID_DESCRIPTOR(ITF_NUM_HID_KEYBOARD, 7, HID_ITF_PROTOCOL_KEYBOARD, sizeof(desc_hid_keyboard_report), EPNUM_HID_KEYBOARD, CFG_TUD_HID_EP_BUFSIZE, 10),
+
+  // HID Mouse
+  TUD_HID_DESCRIPTOR(ITF_NUM_HID_MOUSE, 8, HID_ITF_PROTOCOL_NONE, sizeof(desc_hid_mouse_report), EPNUM_HID_MOUSE, CFG_TUD_HID_EP_BUFSIZE, 10),
+
+  // HID Consumer Control
+  TUD_HID_DESCRIPTOR(ITF_NUM_HID_CONSUMER, 9, HID_ITF_PROTOCOL_NONE, sizeof(desc_hid_consumer_report), EPNUM_HID_CONSUMER, CFG_TUD_HID_EP_BUFSIZE, 10),
 };
 
 #if TUD_OPT_HIGH_SPEED
@@ -186,6 +244,15 @@ uint8_t const desc_hs_configuration[] =
 
   // Interface number, string index, EP Out & EP In address, EP size
   TUD_MSC_DESCRIPTOR(ITF_NUM_MSC, 5, EPNUM_MSC_OUT, EPNUM_MSC_IN, 512),
+
+  // HID Keyboard
+  TUD_HID_DESCRIPTOR(ITF_NUM_HID_KEYBOARD, 7, HID_ITF_PROTOCOL_KEYBOARD, sizeof(desc_hid_keyboard_report), EPNUM_HID_KEYBOARD, CFG_TUD_HID_EP_BUFSIZE, 10),
+
+  // HID Mouse
+  TUD_HID_DESCRIPTOR(ITF_NUM_HID_MOUSE, 8, HID_ITF_PROTOCOL_NONE, sizeof(desc_hid_mouse_report), EPNUM_HID_MOUSE, CFG_TUD_HID_EP_BUFSIZE, 10),
+
+  // HID Consumer Control
+  TUD_HID_DESCRIPTOR(ITF_NUM_HID_CONSUMER, 9, HID_ITF_PROTOCOL_NONE, sizeof(desc_hid_consumer_report), EPNUM_HID_CONSUMER, CFG_TUD_HID_EP_BUFSIZE, 10),
 };
 
 // other speed configuration
@@ -274,6 +341,9 @@ char const *string_desc_arr[] =
   "PicoRuby CDC",                // 4: CDC Interface 0 (Application)
   "PicoRuby MSC",                // 5: MSC Interface
   "PicoRuby CDC Debug",          // 6: CDC Interface 1 (Debug)
+  "PicoRuby HID Keyboard",       // 7: HID Keyboard
+  "PicoRuby HID Mouse",          // 8: HID Mouse
+  "PicoRuby HID Consumer Control", // 9: HID Consumer Control
 };
 
 static uint16_t _desc_str[32 + 1];

@@ -55,6 +55,7 @@ MRuby::CrossBuild.new("r2p2-picoruby-pico2") do |conf|
   conf.gembox "peripheral_utils"
   conf.gembox "peripherals"
   conf.gem core: 'picoruby-shinonome'
+  conf.gem core: 'picoruby-keyboard'
   conf.mrubyc_hal_arm
   conf.picoruby(alloc_libc: false)
 end
