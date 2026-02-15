@@ -1,5 +1,5 @@
 diff --git a/demo/micropython-run.ts b/demo/micropython-run.ts
-index 2eed868..4c24513 100644
+index 2eed868..124c89c 100644
 --- a/demo/micropython-run.ts
 +++ b/demo/micropython-run.ts
 @@ -6,6 +6,7 @@ import { USBCDC } from '../src/usb/cdc.js';
@@ -10,7 +10,15 @@ index 2eed868..4c24513 100644
  
  const args = minimist(process.argv.slice(2), {
    string: [
-@@ -90,5 +91,42 @@ process.stdin.on('data', (chunk) => {
+@@ -49,6 +50,7 @@ if (args.gdb) {
+ 
+ const cdc = new USBCDC(mcu.usbCtrl);
+ cdc.onDeviceConnected = () => {
++  console.log("Device connected!");
+   if (!args.circuitpython) {
+     // We send a newline so the user sees the MicroPython prompt
+     cdc.sendSerialByte('\r'.charCodeAt(0));
+@@ -90,5 +92,42 @@ process.stdin.on('data', (chunk) => {
    }
  });
  
@@ -53,3 +61,23 @@ index 2eed868..4c24513 100644
 +
  simulator.rp2040.core.PC = 0x10000000;
  simulator.execute();
+diff --git a/src/usb/cdc.ts b/src/usb/cdc.ts
+index d88dc6b..6290eb0 100644
+--- a/src/usb/cdc.ts
++++ b/src/usb/cdc.ts
+@@ -45,9 +45,13 @@ export function extractEndpointNumbers(descriptors: ArrayLike<number>) {
+       const attributes = descriptors[index + 3];
+       if ((attributes & 0x3) === ENDPOINT_BULK) {
+         if (address & 0x80) {
+-          result.in = address & 0xf;
++          if (result.in == -1) {
++            result.in = address & 0xf;
++          }
+         } else {
+-          result.out = address & 0xf;
++          if (result.out == -1) {
++            result.out = address & 0xf;
++          }
+         }
+       }
+     }
